@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.db.models import Sum, Count
 from django.db.models.functions import TruncDate
 import cv2
-# import face_recognition
+import face_recognition
 import numpy as np
 import pickle
 import requests
