@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Dashboard - NASA Medical Inventory</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0B3D91 0%, #000000 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .nav {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav a {
+            color: #FC3D21;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #FFC107;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid rgba(252, 61, 33, 0.3);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FC3D21;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #ddd;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(252, 61, 33, 0.3);
+        }
+
+        .section h2 {
+            color: #FC3D21;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #FC3D21;
+            padding-bottom: 10px;
+        }
+
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .inventory-table th {
+            background: rgba(252, 61, 33, 0.3);
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #FC3D21;
+        }
+
+        .inventory-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .inventory-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-good {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-low {
+            background: #FFC107;
+            color: #000;
+        }
+
+        .status-out {
+            background: #F44336;
+            color: white;
+        }
+
+        .search-filter {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-filter input,
+        .search-filter select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #FC3D21;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .search-filter input {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-filter select {
+            min-width: 150px;
+        }
+
+        .view-detail-btn {
+            background: #FC3D21;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .view-detail-btn:hover {
+            background: #d93419;
+        }
+
+        @media (max-width: 768px) {
+            .inventory-table {
+                font-size: 0.9rem;
+            }
+
+            .inventory-table th,
+            .inventory-table td {
+                padding: 8px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Inventory Dashboard</h1>
+    </div>
+
+    <div class="nav">
+        <a href="/">🏠 Home</a>
+        <a href="{% url 'medical_inventory:lockscreen' %}">🔒 Access System</a>
+        <a href="{% url 'medical_inventory:pill_recognition' %}">💊 Pill Recognition</a>
+    </div>
+
+    <div class="container">
+        <!-- Statistics Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Medications</div>
+                <div class="stat-number">{{ total_medications }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Low Stock Items</div>
+                <div class="stat-number">{{ low_stock_count }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Checkouts Today</div>
+                <div class="stat-number">{{ total_checkouts_today }}</div>
+            </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="section">
+            <h2>📦 Complete Inventory</h2>
+            
+            <div class="search-filter">
+                <input type="text" id="searchInput" placeholder="Search medications..." onkeyup="filterTable()">
+                <select id="typeFilter" onchange="filterTable()">
+                    <option value="">All Types</option>
+                    <option value="ANALGESIC">Pain Relief</option>
+                    <option value="ANTIBIOTIC">Antibiotic</option>
+                    <option value="ANTINAUSEA">Anti-Nausea</option>
+                    <option value="SLEEP_AID">Sleep Aid</option>
+                    <option value="ALLERGY">Allergy</option>
+                    <option value="STIMULANT">Stimulant</option>
+                    <option value="OTHER">Other</option>
+                </select>
+                <select id="statusFilter" onchange="filterTable()">
+                    <option value="">All Stock Levels</option>
+                    <option value="good">In Stock</option>
+                    <option value="low">Low Stock</option>
+                    <option value="out">Out of Stock</option>
+                </select>
+            </div>
+
+            <table class="inventory-table" id="inventoryTable">
+                <thead>
+                    <tr>
+                        <th>Medication Name</th>
+                        <th>Type</th>
+                        <th>Dosage</th>
+                        <th>Current Stock</th>
+                        <th>Min. Required</th>
+                        <th>Status</th>
+                        <th>Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for medication in medications %}
+                    <tr data-type="{{ medication.medication_type }}" 
+                        data-status="{% if medication.current_quantity > 10 %}good{% elif medication.current_quantity > 0 %}low{% else %}out{% endif %}">
+                        <td><strong>{{ medication.name }}</strong></td>
+                        <td>{{ medication.get_medication_type_display }}</td>
+                        <td>{{ medication.dosage }}</td>
+                        <td>{{ medication.current_quantity }}</td>
+                        <td>{{ medication.minimum_quantity }}</td>
+                        <td>
+                            {% if medication.current_quantity > 10 %}
+                            <span class="status-badge status-good">In Stock</span>
+                            {% elif medication.current_quantity > 0 %}
+                            <span class="status-badge status-low">Low Stock</span>
+                            {% else %}
+                            <span class="status-badge status-out">Out of Stock</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ medication.container_location }}</td>
+                        <td>
+                            <button class="view-detail-btn" onclick="window.location.href='/inventory/{{ medication.id }}/'">
+                                View Details
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function filterTable() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const table = document.getElementById('inventoryTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const name = row.cells[0].textContent.toLowerCase();
+                const type = row.getAttribute('data-type');
+                const status = row.getAttribute('data-status');
+
+                const matchesSearch = name.includes(searchInput);
+                const matchesType = !typeFilter || type === typeFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+
+                row.style.display = (matchesSearch && matchesType && matchesStatus) ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>

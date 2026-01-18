@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Medical Inventory System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0B3D91 0%, #000000 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .nasa-logo {
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: fadeIn 1.5s ease-out;
+            background: linear-gradient(45deg, #FC3D21, #FFC107);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #ddd;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .mission-statement {
+            max-width: 700px;
+            margin: 0 auto 50px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #ccc;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #FC3D21;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 40px 30px;
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(252, 61, 33, 0.1), rgba(255, 193, 7, 0.1));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            border-color: #FC3D21;
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(252, 61, 33, 0.4);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #FC3D21;
+        }
+
+        .card p {
+            color: #ddd;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card-button {
+            background: #FC3D21;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-button:hover {
+            background: #d93419;
+            transform: scale(1.05);
+        }
+
+        .features {
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #FC3D21;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-item h3 {
+            color: #FFC107;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .feature-item p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated stars background -->
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="nasa-logo">
+                <svg width="150" height="120" viewBox="0 0 150 120" fill="none">
+                    <text x="10" y="70" font-family="Arial, sans-serif" font-weight="bold" font-size="60" fill="#FC3D21">NASA</text>
+                </svg>
+            </div>
+
+            <h1>Medical Inventory System</h1>
+            <p class="subtitle">Advanced Medication Management for Space Missions</p>
+
+            <div class="mission-statement">
+                <strong>Mission:</strong> Ensure astronaut health and safety through intelligent, 
+                automated medication tracking and dispensing. Utilizing cutting-edge facial recognition 
+                and AI-powered inventory management to support long-duration space missions.
+            </div>
+        </div>
+
+        <div class="card-grid">
+            <!-- Access System Card -->
+            <div class="card" onclick="window.location.href='{% url 'medical_inventory:lockscreen' %}'">
+                <div class="card-content">
+                    <span class="card-icon">🔒</span>
+                    <h2>Access System</h2>
+                    <p>Secure medication access using advanced facial recognition technology. 
+                    Authenticate and retrieve prescribed medications with contactless verification.</p>
+                    <button class="card-button">Enter System</button>
+                </div>
+            </div>
+
+            <!-- Inventory Dashboard Card -->
+            <div class="card" onclick="window.location.href='{% url 'medical_inventory:inventory_dashboard' %}'">
+                <div class="card-content">
+                    <span class="card-icon">📊</span>
+                    <h2>Inventory Dashboard</h2>
+                    <p>Real-time monitoring of medication stock levels, usage patterns, and analytics. 
+                    Track all medications with detailed statistics and alerts.</p>
+                    <button class="card-button">View Dashboard</button>
+                </div>
+            </div>
+
+            <!-- Pill Recognition Card -->
+            <div class="card" onclick="window.location.href='{% url 'medical_inventory:pill_recognition' %}'">
+                <div class="card-content">
+                    <span class="card-icon">💊</span>
+                    <h2>Pill Recognition</h2>
+                    <p>AI-powered medication identification system. Instantly recognize and verify 
+                    medications using computer vision technology.</p>
+                    <button class="card-button">Identify Medication</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Features -->
+        <div class="features">
+            <h2>System Capabilities</h2>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3>🎯 Facial Authentication</h3>
+                    <p>Secure, contactless access using state-of-the-art facial recognition technology</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📱 Real-Time Tracking</h3>
+                    <p>Live inventory updates and automated stock level monitoring</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🔐 Smart Lock Integration</h3>
+                    <p>Automated container unlocking via ESP32 microcontroller</p>
+                </div>
+                <div class="feature-item">
+                    <h3>📈 Usage Analytics</h3>
+                    <p>Comprehensive medication usage patterns and trend analysis</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🚨 Low Stock Alerts</h3>
+                    <p>Automatic notifications when medications reach minimum levels</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🤖 AI Recognition</h3>
+                    <p>Advanced pill identification using computer vision</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>NASA HUNCH Program</strong></p>
+            <p>High School Students United with NASA to Create Hardware</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                Developed for the safety and wellbeing of astronauts on long-duration missions
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Generate random stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.width = Math.random() * 2 + 1 + 'px';
+            star.style.height = star.style.width;
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+    </script>
+</body>
+</html>

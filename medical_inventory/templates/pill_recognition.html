@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pill Recognition - NASA Medical Inventory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0B3D91 0%, #000000 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #FC3D21;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .back-link:hover {
+            color: #FFC107;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .camera-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #FC3D21;
+            text-align: center;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 640px;
+            margin: 20px auto;
+            border: 3px solid #FC3D21;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #videoElement {
+            width: 100%;
+            height: auto;
+        }
+
+        .canvas-container {
+            display: none;
+        }
+
+        .button-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        button {
+            background: #FC3D21;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #d93419;
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid rgba(252, 61, 33, 0.3);
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .confidence {
+            color: #FFC107;
+            font-weight: bold;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .status-message.info {
+            background: rgba(33, 150, 243, 0.3);
+            border: 1px solid #2196F3;
+        }
+
+        .status-message.warning {
+            background: rgba(255, 193, 7, 0.3);
+            border: 1px solid #FFC107;
+            color: #000;
+        }
+
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.3);
+            border: 1px solid #F44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Home</a>
+
+        <div class="header">
+            <h1>💊 Pill Recognition System</h1>
+            <p>Use your camera to identify medications</p>
+        </div>
+
+        <div class="camera-section">
+            <div class="video-container">
+                <video id="videoElement" autoplay></video>
+            </div>
+            
+            <div class="canvas-container">
+                <canvas id="canvas"></canvas>
+            </div>
+
+            <div class="button-group">
+                <button id="startCamera">Start Camera</button>
+                <button id="captureBtn" disabled>Capture & Identify</button>
+            </div>
+
+            <div id="statusMessage" class="status-message info">
+                Click "Start Camera" to begin medication identification
+            </div>
+        </div>
+
+        <div id="resultsSection" class="results-section">
+            <h2>Identification Results</h2>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let stream = null;
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startCamera');
+        const captureBtn = document.getElementById('captureBtn');
+        const statusMessage = document.getElementById('statusMessage');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContent = document.getElementById('resultsContent');
+
+        startBtn.addEventListener('click', startCamera);
+        captureBtn.addEventListener('click', captureAndIdentify);
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { width: 640, height: 480 } 
+                });
+                video.srcObject = stream;
+                captureBtn.disabled = false;
+                startBtn.disabled = true;
+                showStatus('Camera active. Hold medication in view and click "Capture & Identify"', 'info');
+            } catch (error) {
+                showStatus('Error accessing camera: ' + error.message, 'error');
+            }
+        }
+
+        async function captureAndIdentify() {
+            // Set canvas dimensions to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Draw current video frame to canvas
+            ctx.drawImage(video, 0, 0);
+            
+            // Convert canvas to blob
+            canvas.toBlob(async (blob) => {
+                showStatus('Analyzing image...', 'info');
+                
+                const formData = new FormData();
+                formData.append('image', blob, 'pill.jpg');
+                
+                try {
+                    const response = await fetch('/api/recognize-pill/', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        displayResults(data);
+                    } else {
+                        showStatus(data.message || 'Pill recognition model not yet implemented', 'warning');
+                    }
+                } catch (error) {
+                    showStatus('Error identifying medication: ' + error.message, 'error');
+                }
+            }, 'image/jpeg');
+        }
+
+        function displayResults(data) {
+            resultsSection.classList.add('show');
+            
+            // This is a placeholder - actual implementation will depend on your ML model
+            resultsContent.innerHTML = `
+                <div class="result-item">
+                    <h3>${data.medication_name || 'Unknown Medication'}</h3>
+                    <p><span class="confidence">Confidence:</span> ${data.confidence || '0'}%</p>
+                    <p><strong>Type:</strong> ${data.medication_type || 'N/A'}</p>
+                    <p><strong>Dosage:</strong> ${data.dosage || 'N/A'}</p>
+                    <p><strong>Description:</strong> ${data.description || 'No description available'}</p>
+                </div>
+            `;
+            
+            showStatus('Identification complete!', 'info');
+        }
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-message ' + type;
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html>
