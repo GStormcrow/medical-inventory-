@@ -291,7 +291,6 @@ def add_astronaut(request):
         try:
             name = request.POST.get('name')
             astronaut_id = request.POST.get('astronaut_id')
-            email = request.POST.get('email', '')
             password = request.POST.get('password', '')
             photo = request.FILES.get('photo')
             
@@ -306,7 +305,7 @@ def add_astronaut(request):
             username = astronaut_id.lower()
             user = User.objects.create_user(
                 username=username,
-                email=email,
+                email=f"{username}@nasa.gov",  # Auto-generate email
                 password=password if password else astronaut_id
             )
             

@@ -1,6 +1,3 @@
-from django.db import models
-
-# Create your models here.
 # models.py
 from django.db import models
 from django.contrib.auth.models import User
@@ -28,25 +25,48 @@ class Medication(models.Model):
         ('OTHER', 'Other'),
     ]
     
+    STATUS_CHOICES = [
+        ('NORMAL', 'Normal'),
+        ('LOW', 'Low Stock'),
+        ('CRITICAL', 'Critical'),
+        ('OUT', 'Out of Stock'),
+    ]
+    
     name = models.CharField(max_length=200)
-    generic_name = models.CharField(max_length=200, blank=True)
-    medication_type = models.CharField(max_length=20, choices=MEDICATION_TYPES)
-    dosage = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
     current_quantity = models.IntegerField(default=0)
     minimum_quantity = models.IntegerField(default=10)
-    container_location = models.CharField(max_length=50)  # Which compartment in storage
     expiration_date = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='NORMAL')
     
-    # For pill recognition
+    # Keep these for backward compatibility but make optional
+    generic_name = models.CharField(max_length=200, blank=True)
+    medication_type = models.CharField(max_length=20, choices=MEDICATION_TYPES, default='OTHER')
+    dosage = models.CharField(max_length=100, default='Standard')
+    description = models.TextField(blank=True)
+    container_location = models.CharField(max_length=50, default='A1')
     pill_image = models.ImageField(upload_to='pill_images/', null=True, blank=True)
     
     def __str__(self):
-        return f"{self.name} ({self.dosage})"
+        return f"{self.name}"
     
     @property
     def is_low_stock(self):
         return self.current_quantity <= self.minimum_quantity
+    
+    def update_status(self):
+        """Automatically update status based on quantity"""
+        if self.current_quantity == 0:
+            self.status = 'OUT'
+        elif self.current_quantity <= (self.minimum_quantity * 0.5):  # 50% of minimum
+            self.status = 'CRITICAL'
+        elif self.current_quantity <= self.minimum_quantity:
+            self.status = 'LOW'
+        else:
+            self.status = 'NORMAL'
+    
+    def save(self, *args, **kwargs):
+        self.update_status()
+        super().save(*args, **kwargs)
 
 
 class Prescription(models.Model):

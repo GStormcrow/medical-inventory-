@@ -10,7 +10,7 @@
 {% block content %}
 <div class="container">
     <div class="page-header">
-        <h1>Manage Medications</h1>
+        <h1>💊 Manage Medications</h1>
         <p>Add medications and upload reference images</p>
     </div>
     {% comment %} .container {
@@ -240,9 +240,9 @@
         background: rgba(76, 175, 80, 0.2);
         border: 1px solid #4CAF50;
         color: #4CAF50;
-    } {% endcomment %}
+    }
 
-
+ {% endcomment %}
 
     <div id="alertBox" class="alert"></div>
 
@@ -257,30 +257,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="generic_name">Generic Name</label>
-                    <input type="text" id="generic_name" name="generic_name">
-                </div>
-
-                <div class="form-group">
-                    <label for="medication_type">Type *</label>
-                    <select id="medication_type" name="medication_type" required>
-                        <option value="">Select type...</option>
-                        <option value="ANALGESIC">Pain Relief</option>
-                        <option value="ANTIBIOTIC">Antibiotic</option>
-                        <option value="ANTINAUSEA">Anti-Nausea</option>
-                        <option value="SLEEP_AID">Sleep Aid</option>
-                        <option value="ALLERGY">Allergy</option>
-                        <option value="STIMULANT">Stimulant</option>
-                        <option value="OTHER">Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="dosage">Dosage *</label>
-                    <input type="text" id="dosage" name="dosage" placeholder="e.g., 200mg" required>
-                </div>
-
-                <div class="form-group">
                     <label for="current_quantity">Current Quantity *</label>
                     <input type="number" id="current_quantity" name="current_quantity" min="0" required>
                 </div>
@@ -291,28 +267,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="container_location">Container Location *</label>
-                    <input type="text" id="container_location" name="container_location" placeholder="e.g., A1" required>
-                </div>
-
-                <div class="form-group">
                     <label for="expiration_date">Expiration Date</label>
                     <input type="date" id="expiration_date" name="expiration_date">
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Usage instructions, side effects, etc."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="pill_image">Pill/Medication Image</label>
-                <input type="file" id="pill_image" name="pill_image" accept="image/*">
-                <p style="color: rgba(255, 255, 255, 0.5); font-size: 0.85rem; margin-top: 5px;">
-                    📸 Clear photo of the pill/medication for reference and recognition
-                </p>
-                <div id="imagePreview" class="file-preview"></div>
             </div>
 
             <button type="submit" class="btn btn-primary">➕ Add Medication</button>
@@ -381,33 +338,30 @@
             if (data.medications && data.medications.length > 0) {
                 grid.innerHTML = data.medications.map(med => {
                     let stockClass = 'stock-good';
-                    let stockText = 'In Stock';
-                    if (med.current_quantity <= 0) {
+                    let stockText = 'Normal';
+                    
+                    if (med.status === 'OUT') {
                         stockClass = 'stock-out';
                         stockText = 'Out of Stock';
-                    } else if (med.current_quantity <= med.minimum_quantity) {
+                    } else if (med.status === 'CRITICAL') {
+                        stockClass = 'stock-out';
+                        stockText = 'Critical';
+                    } else if (med.status === 'LOW') {
                         stockClass = 'stock-low';
                         stockText = 'Low Stock';
                     }
 
                     return `
                         <div class="medication-card">
-                            <img src="${med.image_url || '/static/default-pill.png'}" 
-                                 alt="${med.name}" 
-                                 class="medication-photo"
-                                 onerror="this.src='/static/default-pill.png'">
                             <div class="medication-info">
                                 <div class="medication-name">${med.name}</div>
-                                <div class="medication-type">${med.medication_type}</div>
                                 <div class="medication-details">
-                                    <div><strong>Dosage:</strong> ${med.dosage}</div>
                                     <div><strong>Stock:</strong> ${med.current_quantity} units</div>
-                                    <div><strong>Location:</strong> ${med.container_location}</div>
+                                    <div><strong>Minimum:</strong> ${med.minimum_quantity} units</div>
                                     ${med.expiration_date ? `<div><strong>Expires:</strong> ${med.expiration_date}</div>` : ''}
                                 </div>
                                 <span class="stock-status ${stockClass}">${stockText}</span>
                                 <div class="card-actions">
-                                    <button class="btn btn-secondary" onclick="updateImage(${med.id})">Update Image</button>
                                     <button class="btn btn-secondary" onclick="editMedication(${med.id})">Edit</button>
                                     <button class="btn btn-secondary" onclick="deleteMedication(${med.id})">Delete</button>
                                 </div>
