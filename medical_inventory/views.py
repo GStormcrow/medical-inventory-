@@ -28,15 +28,27 @@ except serial.SerialException as e:
     
 def send_unlock_signal():
     """Send unlock signal to ESP32 via serial"""
-    if esp32_serial and esp32_serial.is_open:
+    if esp32_serial:
         try:
-            esp32_serial.write(b'O')  # unlock command
+            esp32_serial.write(b'unlock')  # unlock command
             response = esp32_serial.readline().decode().strip()
             return response == 'UNLOCKED'
         except Exception as e:
             print(f"Error sending unlock signal: {e}")
             return False
     return False 
+
+# def send_lock_signal():
+#     """Send lock signal to ESP32 via serial"""
+#     if esp32_serial:
+#         try:
+#             esp32_serial.write(b'lock')  # unlock command
+#             response = esp32_serial.readline().decode().strip()
+#             return response == 'LOCKED'
+#         except Exception as e:
+#             print(f"Error sending unlock signal: {e}")
+#             return False
+#     return False
 
 def home(request):
     """Home screen"""
@@ -106,7 +118,8 @@ def authenticate_face(request):
                         return JsonResponse({
                             'success': True,
                             'astronaut_id': astronaut.id,
-                            'astronaut_name': astronaut.name
+                            'astronaut_name': astronaut.name,
+                            'door_unlocked': unlocked_sent,
                         })
             
             # No match found
