@@ -17,7 +17,7 @@
 
 <div class="container">
     <div class="section">
-        <h2>📋 Your Prescribed Medications</h2>
+        <h2>Your Prescribed Medications</h2>
         <div class="medication-grid">
             {% for prescription in prescriptions %}
             <div class="medication-card prescription" onclick="toggleMedication({{ prescription.medication.id }}, true)" data-med-id="{{ prescription.medication.id }}" data-is-prescription="true">
@@ -48,7 +48,7 @@
     </div>
 
     <div class="section">
-        <h2>💊 Additional Available Medications</h2>
+        <h2>Additional Available Medications</h2>
         <div class="medication-grid">
             {% for medication in all_medications %}
             <div class="medication-card" onclick="toggleMedication({{ medication.id }}, false)" data-med-id="{{ medication.id }}" data-is-prescription="false">
@@ -81,7 +81,7 @@
             <p style="color: rgba(255, 255, 255, 0.5);">No medications selected</p>
         </div>
         <button class="checkout-button" id="checkoutBtn" onclick="checkout()" disabled>
-            🔓 Checkout & Unlock Container
+            Checkout & Unlock Container
         </button>
     </div>
 </div>
