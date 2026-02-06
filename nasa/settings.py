@@ -79,7 +79,7 @@ DATABASES = {
         "PORT": PORT,
         "HOST": HOST,
     }
-}
+} 
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
