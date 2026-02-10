@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Capture Astronaut Photo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .photo-capture-container {
+        max-width: 800px;
+        margin: 20px auto;
+        text-align: center;
+    }
+    
+    .camera-container {
+        position: relative;
+        width: 100%;
+        max-width: 640px;
+        margin: 20px auto;
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    #video {
+        width: 100%;
+        display: block;
+    }
+    
+    #canvas {
+        display: none;
+    }
+    
+    .camera-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 400px;
+        border: 3px solid #4CAF50;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    
+    .controls {
+        margin: 20px 0;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 0 10px;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary {
+        background: #4CAF50;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #45a049;
+    }
+    
+    .btn-secondary {
+        background: #2196F3;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #0b7dda;
+    }
+    
+    .btn-danger {
+        background: #f44336;
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background: #da190b;
+    }
+    
+    .preview-container {
+        margin: 20px 0;
+        display: none;
+    }
+    
+    .preview-image {
+        max-width: 400px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .instructions {
+        background: #e3f2fd;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    
+    .instructions h3 {
+        color: #2196F3;
+        margin-top: 0;
+    }
+    
+    .instructions ul {
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+    
+    .instructions li {
+        margin: 8px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="photo-capture-container">
+    <h1>📸 Capture Astronaut Photo</h1>
+    
+    <div class="instructions">
+        <h3>Photo Guidelines:</h3>
+        <ul>
+            <li>Position your face in the center of the oval guide</li>
+            <li>Ensure good lighting - face should be clearly visible</li>
+            <li>Remove sunglasses or any face coverings</li>
+            <li>Maintain a neutral expression</li>
+            <li>Keep still when capturing the photo</li>
+        </ul>
+    </div>
+    
+    <div class="camera-container">
+        <video id="video" autoplay></video>
+        <div class="camera-overlay"></div>
+        <canvas id="canvas"></canvas>
+    </div>
+    
+    <div class="controls">
+        <button id="start-camera" class="btn btn-primary">Start Camera</button>
+        <button id="capture" class="btn btn-secondary" style="display: none;">Capture Photo</button>
+        <button id="retake" class="btn btn-danger" style="display: none;">Retake</button>
+        <button id="save" class="btn btn-primary" style="display: none;">Save Photo</button>
+    </div>
+    
+    <div class="preview-container" id="preview">
+        <h3>Preview:</h3>
+        <img id="preview-image" class="preview-image" src="" alt="Captured photo">
+    </div>
+    
+    <div id="status-message" style="margin-top: 20px;"></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    const startButton = document.getElementById('start-camera');
+    const captureButton = document.getElementById('capture');
+    const retakeButton = document.getElementById('retake');
+    const saveButton = document.getElementById('save');
+    const preview = document.getElementById('preview');
+    const previewImage = document.getElementById('preview-image');
+    const statusMessage = document.getElementById('status-message');
+    
+    let stream = null;
+    let photoData = null;
+    
+    startButton.addEventListener('click', async () => {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    facingMode: 'user'
+                } 
+            });
+            video.srcObject = stream;
+            startButton.style.display = 'none';
+            captureButton.style.display = 'inline-block';
+            showStatus('Camera started. Position yourself and click Capture.', 'info');
+        } catch (err) {
+            console.error('Error accessing camera:', err);
+            showStatus('Error: Could not access camera. Please check permissions.', 'error');
+        }
+    });
+    
+    captureButton.addEventListener('click', () => {
+        // Set canvas size to match video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw current video frame to canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Get image data
+        photoData = canvas.toDataURL('image/jpeg', 0.95);
+        
+        // Show preview
+        previewImage.src = photoData;
+        preview.style.display = 'block';
+        
+        // Update buttons
+        captureButton.style.display = 'none';
+        retakeButton.style.display = 'inline-block';
+        saveButton.style.display = 'inline-block';
+        
+        // Stop camera
+        stopCamera();
+        
+        showStatus('Photo captured! Review and save, or retake.', 'success');
+    });
+    
+    retakeButton.addEventListener('click', () => {
+        preview.style.display = 'none';
+        retakeButton.style.display = 'none';
+        saveButton.style.display = 'none';
+        startButton.style.display = 'inline-block';
+        photoData = null;
+        showStatus('Ready to take a new photo.', 'info');
+    });
+    
+    saveButton.addEventListener('click', async () => {
+        if (!photoData) {
+            showStatus('Error: No photo to save.', 'error');
+            return;
+        }
+        
+        showStatus('Saving photo...', 'info');
+        saveButton.disabled = true;
+        
+        try {
+            const formData = new FormData();
+            formData.append('photo_data', photoData);
+            formData.append('profile_id', '{{ profile_id }}');
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            
+            const response = await fetch('{% url "capture_photo" %}', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showStatus('✓ Photo saved successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = '{% url "astronaut_list" %}';
+                }, 2000);
+            } else {
+                showStatus('Error: ' + (data.error || 'Failed to save photo'), 'error');
+                saveButton.disabled = false;
+            }
+        } catch (err) {
+            console.error('Error saving photo:', err);
+            showStatus('Error: Failed to save photo. Please try again.', 'error');
+            saveButton.disabled = false;
+        }
+    });
+    
+    function stopCamera() {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+            stream = null;
+        }
+    }
+    
+    function showStatus(message, type) {
+        statusMessage.innerHTML = message;
+        statusMessage.style.padding = '12px 20px';
+        statusMessage.style.borderRadius = '4px';
+        statusMessage.style.fontWeight = 'bold';
+        
+        if (type === 'success') {
+            statusMessage.style.background = '#d4edda';
+            statusMessage.style.color = '#155724';
+        } else if (type === 'error') {
+            statusMessage.style.background = '#f8d7da';
+            statusMessage.style.color = '#721c24';
+        } else {
+            statusMessage.style.background = '#d1ecf1';
+            statusMessage.style.color = '#0c5460';
+        }
+    }
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', stopCamera);
+</script>
+{% endblock %}

@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}QR Code - NASA Medical Inventory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .qr-container {
+        max-width: 800px;
+        margin: 50px auto;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .qr-header {
+        margin-bottom: 40px;
+    }
+    
+    .qr-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .qr-header p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.1rem;
+    }
+    
+    .qr-card {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        margin-bottom: 30px;
+    }
+    
+    .qr-image {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        margin: 20px auto;
+        display: block;
+        border: 4px solid #FC3D21;
+        border-radius: 8px;
+    }
+    
+    .url-display {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-family: monospace;
+        font-size: 16px;
+        color: #333;
+        word-break: break-all;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+    
+    .qr-btn {
+        padding: 12px 30px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .qr-btn-primary {
+        background: #FC3D21;
+        color: white;
+    }
+    
+    .qr-btn-primary:hover {
+        background: #d93419;
+        transform: translateY(-2px);
+    }
+    
+    .qr-btn-secondary {
+        background: #2196F3;
+        color: white;
+    }
+    
+    .qr-btn-secondary:hover {
+        background: #0b7dda;
+        transform: translateY(-2px);
+    }
+    
+    .instructions {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 30px;
+        border-radius: 12px;
+        margin-top: 40px;
+        text-align: left;
+    }
+    
+    .instructions h2 {
+        color: #FC3D21;
+        margin-bottom: 20px;
+    }
+    
+    .instructions ul {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .instructions li {
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .instructions li:last-child {
+        border-bottom: none;
+    }
+    
+    .instructions li::before {
+        content: "✓ ";
+        color: #4CAF50;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="qr-container">
+    <div class="qr-header">
+        <h1>📱 QR Code Access</h1>
+        <p>Scan to access the NASA Medical Inventory System</p>
+    </div>
+    
+    <div class="qr-card">
+        <h2 style="color: #333; margin-bottom: 20px;">Website QR Code</h2>
+        
+        <img src="{% url 'medical_inventory:generate_qr_code' %}" 
+             alt="QR Code for NASA Medical Inventory" 
+             class="qr-image"
+             id="qrImage">
+        
+        <div class="url-display">
+            {{ site_url }}
+        </div>
+        
+        <div class="button-group">
+            <button class="qr-btn qr-btn-primary" onclick="downloadQR()">
+                📥 Download QR Code
+            </button>
+            <button class="qr-btn qr-btn-secondary" onclick="copyURL()">
+                📋 Copy URL
+            </button>
+            <button class="qr-btn qr-btn-secondary" onclick="printQR()">
+                🖨️ Print QR Code
+            </button>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h2>How to Use:</h2>
+        <ul>
+            <li>Download the QR code image for presentations or printed materials</li>
+            <li>Judges and visitors can scan the QR code with their smartphones</li>
+            <li>The QR code links directly to your medical inventory system</li>
+            <li>Perfect for demonstration booths, posters, and presentation slides</li>
+            <li>High error correction ensures reliable scanning even if partially obscured</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    function downloadQR() {
+        const link = document.createElement('a');
+        link.href = '{% url "medical_inventory:generate_qr_code" %}';
+        link.download = 'nasa_medical_inventory_qr.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    function copyURL() {
+        const url = '{{ site_url }}';
+        navigator.clipboard.writeText(url).then(() => {
+            alert('✓ URL copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+            // Fallback
+            const textArea = document.createElement('textarea');
+            textArea.value = url;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('✓ URL copied to clipboard!');
+        });
+    }
+    
+    function printQR() {
+        const printWindow = window.open('', '', 'width=600,height=600');
+        printWindow.document.write(`
+            <html>
+            <head>
+                <title>NASA Medical Inventory - QR Code</title>
+                <style>
+                    body {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 100vh;
+                        font-family: Arial, sans-serif;
+                        padding: 40px;
+                    }
+                    h1 {
+                        color: #FC3D21;
+                        margin-bottom: 20px;
+                    }
+                    img {
+                        max-width: 400px;
+                        border: 4px solid #FC3D21;
+                        border-radius: 8px;
+                    }
+                    .url {
+                        margin-top: 20px;
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>NASA Medical Inventory System</h1>
+                <img src="{% url 'medical_inventory:generate_qr_code' %}" alt="QR Code">
+                <p class="url">{{ site_url }}</p>
+                <p>Scan to access the system</p>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        setTimeout(() => {
+            printWindow.print();
+        }, 250);
+    }
+</script>
+{% endblock %}

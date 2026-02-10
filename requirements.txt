@@ -38,3 +38,10 @@ keras>=2.13.0
 
 # Image Processing
 opencv-contrib-python>=4.8.0  # Additional OpenCV modules
+
+# QR Code Generation
+qrcode[pil]>=7.4.2
+
+# Other
+requests>=2.31.0
+python-dotenv>=1.0.0

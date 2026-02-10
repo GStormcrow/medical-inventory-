@@ -4,12 +4,12 @@ Advanced medication management system for space missions using facial recognitio
 
 ## Features
 
-- 🔐 Facial Recognition Authentication
-- 💊 Automated Medication Dispensing
-- 📊 Real-time Inventory Tracking
-- 📈 Usage Analytics and Reporting
-- 🤖 AI-Powered Pill Recognition
-- 🔓 ESP32-Controlled Smart Lock
+- Facial Recognition Authentication
+- Automated Medication Dispensing
+- Real-time Inventory Tracking
+- Usage Analytics and Reporting
+- AI-Powered Pill Recognition
+- ESP32-Controlled Smart Lock
 
 ## Quick Start
 

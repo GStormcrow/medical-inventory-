@@ -46,7 +46,7 @@
     </div>
 
     <div class="section">
-        <h2>📈 Usage Statistics (Last 30 Days)</h2>
+        <h2>Usage Statistics (Last 30 Days)</h2>
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="number">{{ total_dispensed_30d }}</div>
@@ -68,14 +68,14 @@
     </div>
 
     <div class="section">
-        <h2>🔍 Recent Checkouts</h2>
+        <h2>Recent Checkouts</h2>
         <div class="checkout-list">
             {% for checkout in checkouts %}
             <div class="checkout-item">
                 <div class="astronaut">{{ checkout.astronaut.name }}</div>
                 <div>Quantity: {{ checkout.quantity }} unit{{ checkout.quantity|pluralize }}</div>
                 {% if checkout.is_prescription %}
-                <div style="color: #FFC107; font-size: 0.9rem;">📋 Prescription</div>
+                <div style="color: #FFC107; font-size: 0.9rem;">Prescription</div>
                 {% endif %}
                 <div class="time">{{ checkout.checkout_time|date:"M d, Y - H:i" }}</div>
                 {% if checkout.notes %}
@@ -89,7 +89,7 @@
     </div>
 
     <div class="section">
-        <h2>📋 Inventory History</h2>
+        <h2>Inventory History</h2>
         <table class="log-table">
             <thead>
                 <tr>

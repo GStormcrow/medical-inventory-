@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search Medications{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-container {
+        max-width: 800px;
+        margin: 20px auto;
+    }
+    
+    .search-box {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 12px 40px 12px 12px;
+        font-size: 16px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #4CAF50;
+    }
+    
+    .search-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+    }
+    
+    .medication-card {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .medication-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .medication-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    .medication-info {
+        color: #666;
+        font-size: 14px;
+    }
+    
+    .quantity-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        background: #4CAF50;
+        color: white;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+    
+    .quantity-badge.low {
+        background: #ff9800;
+    }
+    
+    .quantity-badge.critical {
+        background: #f44336;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <h1>Search Medications</h1>
+    
+    <div class="search-box">
+        <input type="text" 
+               id="medication-search" 
+               class="search-input" 
+               placeholder="Search by name, description, or category..."
+               value="{{ query }}"
+               autocomplete="off">
+        <span class="search-icon">🔍</span>
+    </div>
+    
+    <div id="search-results">
+        {% if medications %}
+            {% for medication in medications %}
+            <div class="medication-card" onclick="window.location.href='{% url 'dispense_medication' medication.id %}'">
+                <div class="medication-name">{{ medication.name }}</div>
+                <div class="medication-info">
+                    <span class="quantity-badge {% if medication.quantity < 10 %}critical{% elif medication.quantity < 30 %}low{% endif %}">
+                        {{ medication.quantity }} units
+                    </span>
+                    {% if medication.description %}
+                        <p style="margin-top: 8px;">{{ medication.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-results">
+                <p>No medications found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const searchInput = document.getElementById('medication-search');
+    const resultsDiv = document.getElementById('search-results');
+    let searchTimeout;
+    
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        
+        searchTimeout = setTimeout(function() {
+            const query = searchInput.value.trim();
+            
+            // Show loading
+            resultsDiv.innerHTML = '<div class="loading">Searching...</div>';
+            
+            // Fetch results
+            fetch(`{% url 'search_medications' %}?q=${encodeURIComponent(query)}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.medications.length === 0) {
+                    resultsDiv.innerHTML = '<div class="no-results"><p>No medications found.</p></div>';
+                    return;
+                }
+                
+                let html = '';
+                data.medications.forEach(med => {
+                    let quantityClass = '';
+                    if (med.quantity < 10) quantityClass = 'critical';
+                    else if (med.quantity < 30) quantityClass = 'low';
+                    
+                    html += `
+                        <div class="medication-card" onclick="window.location.href='/medications/${med.id}/dispense/'">
+                            <div class="medication-name">${med.name}</div>
+                            <div class="medication-info">
+                                <span class="quantity-badge ${quantityClass}">
+                                    ${med.quantity} units
+                                </span>
+                                ${med.description ? `<p style="margin-top: 8px;">${med.description}</p>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                resultsDiv.innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Search error:', error);
+                resultsDiv.innerHTML = '<div class="no-results"><p>Error loading results.</p></div>';
+            });
+        }, 300); // Debounce for 300ms
+    });
+</script>
+{% endblock %}

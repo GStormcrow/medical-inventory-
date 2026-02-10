@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Warning Log - NASA Medical Inventory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .warning-container {
+        max-width: 1400px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #FC3D21;
+        margin: 10px 0;
+    }
+    
+    .stat-label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+    
+    .filters-section {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .filter-group label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .export-btn {
+        background: #2196F3;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-left: auto;
+    }
+    
+    .export-btn:hover {
+        background: #0b7dda;
+    }
+    
+    .warning-table {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.03);
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .warning-table th {
+        background: rgba(252, 61, 33, 0.2);
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid rgba(252, 61, 33, 0.5);
+    }
+    
+    .warning-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .warning-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .severity-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    .severity-low { background: #4CAF50; color: white; }
+    .severity-medium { background: #ff9800; color: white; }
+    .severity-high { background: #ff5722; color: white; }
+    .severity-critical { background: #f44336; color: white; }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+    
+    .status-acknowledged { background: #4CAF50; color: white; }
+    .status-pending { background: #f44336; color: white; }
+    
+    .acknowledge-btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 6px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    
+    .acknowledge-btn:hover {
+        background: #45a049;
+    }
+    
+    .acknowledge-btn:disabled {
+        background: #999;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="warning-container">
+    <div class="page-header">
+        <h1>⚠️ Medication Warning Log</h1>
+        <p>Monitor and manage medication threshold warnings</p>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.total }}</div>
+            <div class="stat-label">Total Warnings</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.pending }}</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.acknowledged }}</div>
+            <div class="stat-label">Acknowledged</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.critical }}</div>
+            <div class="stat-label">Critical</div>
+        </div>
+    </div>
+    
+    <div class="filters-section">
+        <form method="get" style="display: flex; gap: 15px; flex-wrap: wrap; flex: 1;">
+            <div class="filter-group">
+                <label>Severity:</label>
+                <select name="severity" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    <option value="LOW" {% if request.GET.severity == 'LOW' %}selected{% endif %}>Low</option>
+                    <option value="MEDIUM" {% if request.GET.severity == 'MEDIUM' %}selected{% endif %}>Medium</option>
+                    <option value="HIGH" {% if request.GET.severity == 'HIGH' %}selected{% endif %}>High</option>
+                    <option value="CRITICAL" {% if request.GET.severity == 'CRITICAL' %}selected{% endif %}>Critical</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Status:</label>
+                <select name="acknowledged" onchange="this.form.submit()">
+                    <option value="">All</option>
+                    <option value="false" {% if request.GET.acknowledged == 'false' %}selected{% endif %}>Pending</option>
+                    <option value="true" {% if request.GET.acknowledged == 'true' %}selected{% endif %}>Acknowledged</option>
+                </select>
+            </div>
+        </form>
+        
+        <button class="export-btn" onclick="exportWarnings()">📊 Export to CSV</button>
+    </div>
+    
+    <table class="warning-table">
+        <thead>
+            <tr>
+                <th>Date & Time</th>
+                <th>Astronaut</th>
+                <th>Medication</th>
+                <th>Quantity</th>
+                <th>Severity</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for warning in warnings %}
+            <tr>
+                <td>{{ warning.timestamp|date:"M d, Y H:i" }}</td>
+                <td>{{ warning.astronaut.name }}</td>
+                <td>{{ warning.medication.name }}</td>
+                <td>{{ warning.quantity_taken }}</td>
+                <td>
+                    <span class="severity-badge severity-{{ warning.severity|lower }}">
+                        {{ warning.get_severity_display }}
+                    </span>
+                </td>
+                <td>{{ warning.warning_message }}</td>
+                <td>
+                    {% if warning.acknowledged %}
+                        <span class="status-badge status-acknowledged">✓ Acknowledged</span><br>
+                        <small style="color: rgba(255, 255, 255, 0.5);">
+                            by {{ warning.acknowledged_by.name }}<br>
+                            {{ warning.acknowledged_at|date:"M d, H:i" }}
+                        </small>
+                    {% else %}
+                        <span class="status-badge status-pending">⚠ Pending</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if not warning.acknowledged %}
+                        <form method="post" action="{% url 'medical_inventory:acknowledge_warning' warning.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="acknowledge-btn">Acknowledge</button>
+                        </form>
+                    {% else %}
+                        <button class="acknowledge-btn" disabled>Acknowledged</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.5);">
+                    No warnings found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    function exportWarnings() {
+        const currentParams = new URLSearchParams(window.location.search);
+        currentParams.set('export', 'csv');
+        window.location.href = '{% url "medical_inventory:warning_log" %}?' + currentParams.toString();
+    }
+</script>
+{% endblock %}

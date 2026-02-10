@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Astronaut, Medication, Prescription, MedicationCheckout, InventoryLog, SystemLog
+from .models import Astronaut, Medication, Prescription, MedicationCheckout, InventoryLog, SystemLog, WarningLog, MedicationThreshold, EmergencyAccess
 
 @admin.register(Astronaut)
 class AstronautAdmin(admin.ModelAdmin):
@@ -41,3 +41,23 @@ class SystemLogAdmin(admin.ModelAdmin):
     list_filter = ['event_type', 'timestamp']
     search_fields = ['astronaut__name', 'description']
     date_hierarchy = 'timestamp'
+
+@admin.register(WarningLog)
+class WarningLogAdmin(admin.ModelAdmin):
+    list_display = ['astronaut', 'medication', 'quantity_taken', 'severity', 'timestamp', 'acknowledged']
+    list_filter = ['severity', 'acknowledged', 'timestamp']
+    search_fields = ['astronaut__name', 'medication__name']
+    date_hierarchy = 'timestamp'
+
+@admin.register(MedicationThreshold)
+class MedicationThresholdAdmin(admin.ModelAdmin):
+    list_display = ['medication', 'daily_limit', 'single_dose_limit', 'warning_percentage']
+    search_fields = ['medication__name']
+
+@admin.register(EmergencyAccess)
+class EmergencyAccessAdmin(admin.ModelAdmin):
+    list_display = ['accessed_at', 'accessed_by_name', 'ip_address']
+    list_filter = ['accessed_at']
+    search_fields = ['accessed_by_name', 'reason']
+    date_hierarchy = 'accessed_at'
+    readonly_fields = ['accessed_at', 'pin_hash']

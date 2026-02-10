@@ -1,6 +1,7 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import hashlib
 
 # Load environment variables
 load_dotenv()
@@ -111,9 +112,51 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# QR Code Configuration
+QR_CODE_ERROR_CORRECTION = 'H'  # High error correction
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ESP32 Configuration
-ESP32_IP = os.getenv('ESP32_IP', '192.168.1.100')
+ESP32_IP_ADDRESS = '192.168.1.100'  # UPDATE THIS to your ESP32's IP address
+# For serial communication (alternative to WiFi)
+# ESP32_SERIAL_PORT = '/dev/ttyUSB0'  # Linux
+ESP32_SERIAL_PORT = 'COM3'  # Windows
+ESP32_BAUD_RATE = 115200
 CAMERA_INDEX = int(os.getenv('CAMERA_INDEX', '0'))
+
+# Emergency Access PIN Configuration
+# For production, use a secure PIN and change this!
+# To generate a hash: hashlib.sha256('YOUR_PIN'.encode()).hexdigest()
+EMERGENCY_PIN_HASH = hashlib.sha256('1234'.encode()).hexdigest()
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'debug.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'medical_inventory': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
+# Make sure these directories exist
+os.makedirs(os.path.join(MEDIA_ROOT, 'astronaut_photos'), exist_ok=True)
+os.makedirs(os.path.join(MEDIA_ROOT, 'pill_images'), exist_ok=True)
+os.makedirs(os.path.join(MEDIA_ROOT, 'temp'), exist_ok=True)

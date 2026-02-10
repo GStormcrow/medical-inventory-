@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Emergency Access - NASA Medical Inventory{% endblock %}
+
+{% block extra_css %}
+<style>
+    .emergency-container {
+        max-width: 500px;
+        margin: 50px auto;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .emergency-header {
+        background: linear-gradient(135deg, #f44336, #d32f2f);
+        color: white;
+        padding: 30px;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+    }
+    
+    .emergency-icon {
+        font-size: 64px;
+        margin-bottom: 10px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+    
+    .emergency-header h1 {
+        margin: 0;
+        font-size: 28px;
+    }
+    
+    .emergency-body {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 40px 30px;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .pin-display {
+        background: #000;
+        color: #0f0;
+        font-size: 32px;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 12px;
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #0f0;
+    }
+    
+    .pin-pad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin: 20px 0;
+    }
+    
+    .pin-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        padding: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .pin-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: #f44336;
+        transform: scale(1.05);
+    }
+    
+    .pin-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .pin-btn-clear {
+        background: rgba(244, 67, 54, 0.3);
+    }
+    
+    .pin-btn-enter {
+        background: rgba(76, 175, 80, 0.3);
+        grid-column: span 2;
+    }
+    
+    .form-group {
+        margin: 20px 0;
+        text-align: left;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 600;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 14px;
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+    
+    .status-message {
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-weight: 600;
+    }
+    
+    .status-success {
+        background: rgba(76, 175, 80, 0.2);
+        border: 1px solid #4CAF50;
+        color: #4CAF50;
+    }
+    
+    .status-error {
+        background: rgba(244, 67, 54, 0.2);
+        border: 1px solid #f44336;
+        color: #f44336;
+    }
+    
+    .warning-text {
+        background: rgba(255, 193, 7, 0.2);
+        border: 1px solid #FFC107;
+        color: #FFC107;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="emergency-container">
+    <div class="emergency-header">
+        <div class="emergency-icon">🚨</div>
+        <h1>EMERGENCY ACCESS</h1>
+        <p style="margin: 10px 0 0 0; font-size: 14px;">For use in critical situations only</p>
+    </div>
+    
+    <div class="emergency-body">
+        <div class="warning-text">
+            ⚠️ This access is logged and monitored. Use only in genuine emergencies.
+        </div>
+        
+        <form id="emergencyForm">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="name">Your Name *</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">Reason for Emergency Access *</label>
+                <textarea id="reason" name="reason" required placeholder="Briefly describe the emergency situation"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Emergency PIN *</label>
+                <div class="pin-display" id="pinDisplay">****</div>
+            </div>
+            
+            <div class="pin-pad">
+                <button type="button" class="pin-btn" onclick="addDigit('1')">1</button>
+                <button type="button" class="pin-btn" onclick="addDigit('2')">2</button>
+                <button type="button" class="pin-btn" onclick="addDigit('3')">3</button>
+                <button type="button" class="pin-btn" onclick="addDigit('4')">4</button>
+                <button type="button" class="pin-btn" onclick="addDigit('5')">5</button>
+                <button type="button" class="pin-btn" onclick="addDigit('6')">6</button>
+                <button type="button" class="pin-btn" onclick="addDigit('7')">7</button>
+                <button type="button" class="pin-btn" onclick="addDigit('8')">8</button>
+                <button type="button" class="pin-btn" onclick="addDigit('9')">9</button>
+                <button type="button" class="pin-btn pin-btn-clear" onclick="clearPin()">CLEAR</button>
+                <button type="button" class="pin-btn" onclick="addDigit('0')">0</button>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 18px; margin-top: 20px;">
+                🔓 GRANT EMERGENCY ACCESS
+            </button>
+        </form>
+        
+        <div id="statusMessage" style="display: none;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    let pin = '';
+    const maxPinLength = 10;
+    
+    function addDigit(digit) {
+        if (pin.length < maxPinLength) {
+            pin += digit;
+            updatePinDisplay();
+        }
+    }
+    
+    function clearPin() {
+        pin = '';
+        updatePinDisplay();
+    }
+    
+    function updatePinDisplay() {
+        const display = document.getElementById('pinDisplay');
+        if (pin.length === 0) {
+            display.textContent = '****';
+        } else {
+            display.textContent = '*'.repeat(pin.length);
+        }
+    }
+    
+    document.getElementById('emergencyForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('name').value.trim();
+        const reason = document.getElementById('reason').value.trim();
+        
+        if (!name || !reason) {
+            showStatus('Please fill in all fields', 'error');
+            return;
+        }
+        
+        if (pin.length < 4) {
+            showStatus('Please enter a valid PIN', 'error');
+            return;
+        }
+        
+        showStatus('Processing...', 'info');
+        
+        try {
+            const formData = new FormData();
+            formData.append('emergency_pin', pin);
+            formData.append('name', name);
+            formData.append('reason', reason);
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            
+            const response = await fetch('{% url "medical_inventory:emergency_access" %}', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showStatus('✓ Emergency access granted! Container unlocked.', 'success');
+                
+                // Clear form
+                document.getElementById('emergencyForm').reset();
+                clearPin();
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 3000);
+            } else {
+                showStatus('✗ Access denied: ' + data.message, 'error');
+                clearPin();
+            }
+        } catch (error) {
+            showStatus('✗ Connection error. Please try again.', 'error');
+            console.error('Error:', error);
+        }
+    });
+    
+    function showStatus(message, type) {
+        const statusDiv = document.getElementById('statusMessage');
+        statusDiv.textContent = message;
+        statusDiv.className = 'status-message status-' + type;
+        statusDiv.style.display = 'block';
+    }
+</script>
+{% endblock %}
