@@ -22,7 +22,6 @@ import csv
 import hashlib
 import io
 import base64
-import qrcode
 import os
 from datetime import timedelta
 from .models import Astronaut, Medication, Prescription, MedicationCheckout, InventoryLog, SystemLog
