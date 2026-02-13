@@ -13985,3 +13985,22 @@ Not Found: /accounts/login/
 "GET /inventory/2/ HTTP/1.1" 200 8654
 "GET /manage/medications/ HTTP/1.1" 200 15585
 "GET /api/medications/list/ HTTP/1.1" 200 493
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\nasa\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\nasa\settings.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2627
+"GET /static/css/base.css HTTP/1.1" 200 5130
+"GET /static/css/home.css HTTP/1.1" 200 1974
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 9824
+"GET /lockscreen/ HTTP/1.1" 200 7196
+"GET /static/css/lockscreen.css HTTP/1.1" 200 3090
+"POST /api/authenticate/ HTTP/1.1" 200 110

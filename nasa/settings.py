@@ -74,11 +74,11 @@ PASSWORD = os.getenv('DB_PASSWORD')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': NAME,
-        'USER': USER,
-        "PASSWORD": PASSWORD,
-        "PORT": PORT,
-        "HOST": HOST,
+        'NAME': "defaultdb",
+        'USER': "avnadmin",
+        "PASSWORD": "AVNS__UHNCwe_qRkMs9s9EiA",
+        "PORT": 21603,
+        "HOST": "nasa-medical-jargudo08-bb19.f.aivencloud.com",
     }
 } 
 
