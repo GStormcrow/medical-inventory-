@@ -10,6 +10,9 @@
 {% block content %}
 <div class="page-header">
     <h1>Inventory Dashboard</h1>
+    <a href="{% url 'medical_inventory:add_medication' %}" class="btn-add">
+        + Add New Medication
+    </a>
 </div>
 
 <div class="container">

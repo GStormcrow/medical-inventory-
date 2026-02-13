@@ -14,6 +14,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-temporary-key')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
+
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -56,12 +58,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'nasa.wsgi.application'
 
 # Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+HOST = os.getenv('DB_HOST')
+PORT = os.getenv('DB_PORT')
+NAME = os.getenv('DB_NAME')
+USER = os.getenv('DB_USER')
+PASSWORD = os.getenv('DB_PASSWORD')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': NAME,
+        'USER': USER,
+        "PASSWORD": PASSWORD,
+        "PORT": PORT,
+        "HOST": HOST,
     }
-}
+} 
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
