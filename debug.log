@@ -13861,3 +13861,12 @@ C:\Users\jayde\Downloads\medical_inventory\medical-inventory-\medical_inventory\
 Watching for file changes with StatReloader
 "GET /api/medications/add/ HTTP/1.1" 200 6292
 "GET /api/medications/add/ HTTP/1.1" 200 6292
+"GET /api/medications/add/ HTTP/1.1" 200 6313
+"GET /api/medications/add/ HTTP/1.1" 200 6313
+"GET /api/medications/add/ HTTP/1.1" 200 6313
+"GET /static/css/inventory.css HTTP/1.1" 304 0
+"GET /static/css/base.css HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 9824
+"POST /api/medications/add/ HTTP/1.1" 302 0
+"GET /inventory/ HTTP/1.1" 200 10584
