@@ -10,6 +10,9 @@ import face_recognition
 import pickle
 import requests
 import json
+from PIL import Image
+import numpy as np
+import io
 from datetime import timedelta
 from .models import Astronaut, Medication, Prescription, MedicationCheckout, InventoryLog, SystemLog
 
@@ -29,18 +32,66 @@ def lockscreen(request):
 
 @csrf_exempt
 def authenticate_face(request):
-    """Single image capture face authentication"""
+    """
+    Single image capture face authentication with robust image format handling
+    """
     if request.method == 'POST' and request.FILES.get('image'):
         try:
             image_file = request.FILES['image']
             
-            # Load image with face_recognition
-            image = face_recognition.load_image_file(image_file)
+            # Method 1: Try using PIL to ensure proper format
+            try:
+                # Open image with PIL
+                pil_image = Image.open(image_file)
+                
+                # Convert to RGB if needed (handles RGBA, LA, L, CMYK, etc.)
+                if pil_image.mode != 'RGB':
+                    print(f"Converting image from {pil_image.mode} to RGB")
+                    pil_image = pil_image.convert('RGB')
+                
+                # Convert PIL image to numpy array for face_recognition
+                image_array = np.array(pil_image)
+                
+                print(f"Image loaded successfully: Shape={image_array.shape}, Dtype={image_array.dtype}")
+                
+            except Exception as pil_error:
+                print(f"PIL loading failed: {pil_error}")
+                
+                # Method 2: Fallback - try direct face_recognition loading
+                try:
+                    # Reset file pointer
+                    image_file.seek(0)
+                    # Load directly with face_recognition
+                    image_array = face_recognition.load_image_file(image_file)
+                    print(f"Direct load successful: Shape={image_array.shape}")
+                    
+                except Exception as direct_error:
+                    print(f"Direct loading also failed: {direct_error}")
+                    return JsonResponse({
+                        'success': False,
+                        'message': 'Unable to process image format. Please try again or use a different camera.'
+                    })
+            
+            # Ensure image is in correct format (8-bit RGB)
+            if image_array.dtype != np.uint8:
+                print(f"Converting dtype from {image_array.dtype} to uint8")
+                image_array = image_array.astype(np.uint8)
+            
+            # Ensure 3 channels (RGB)
+            if len(image_array.shape) == 2:  # Grayscale
+                print("Converting grayscale to RGB")
+                image_array = np.stack([image_array] * 3, axis=-1)
+            elif image_array.shape[2] == 4:  # RGBA
+                print("Converting RGBA to RGB")
+                image_array = image_array[:, :, :3]
+            
+            print(f"Final image format: Shape={image_array.shape}, Dtype={image_array.dtype}")
             
             # Find faces in the uploaded image
-            face_locations = face_recognition.face_locations(image, model="hog")
+            face_locations = face_recognition.face_locations(image_array, model="hog")
             
             if not face_locations:
+                from .models import SystemLog
                 SystemLog.objects.create(
                     event_type='AUTH_FAILURE',
                     description="No face detected in image",
@@ -48,44 +99,89 @@ def authenticate_face(request):
                 )
                 return JsonResponse({
                     'success': False,
-                    'message': 'No face detected. Please ensure your face is clearly visible.'
+                    'message': 'No face detected. Please ensure your face is clearly visible and well-lit.'
                 })
             
+            print(f"Found {len(face_locations)} face(s)")
+            
             # Get face encodings
-            face_encodings = face_recognition.face_encodings(image, face_locations)
+            face_encodings = face_recognition.face_encodings(image_array, face_locations)
             
             if not face_encodings:
                 return JsonResponse({
                     'success': False,
-                    'message': 'Could not process face. Please try again.'
+                    'message': 'Could not process face features. Please try again with better lighting.'
                 })
             
             # Load known faces from database
+            from .models import Astronaut
             astronauts = Astronaut.objects.exclude(face_encoding__isnull=True)
             
+            if not astronauts:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'No astronauts registered in the system. Please register first.'
+                })
+            
+            # Try to match faces
             for face_encoding in face_encodings:
                 for astronaut in astronauts:
-                    known_encoding = pickle.loads(astronaut.face_encoding)
-                    
-                    # Compare faces
-                    matches = face_recognition.compare_faces([known_encoding], face_encoding, tolerance=0.6)
-                    
-                    if matches[0]:
-                        # Face recognized!
-                        SystemLog.objects.create(
-                            event_type='AUTH_SUCCESS',
-                            astronaut=astronaut,
-                            description=f"Astronaut {astronaut.name} successfully authenticated",
-                            ip_address=request.META.get('REMOTE_ADDR')
+                    try:
+                        known_encoding = pickle.loads(astronaut.face_encoding)
+                        
+                        # Compare faces with multiple tolerance levels
+                        # Try strict match first
+                        matches = face_recognition.compare_faces(
+                            [known_encoding], 
+                            face_encoding, 
+                            tolerance=0.5  # Stricter
                         )
                         
-                        return JsonResponse({
-                            'success': True,
-                            'astronaut_id': astronaut.id,
-                            'astronaut_name': astronaut.name
-                        })
+                        if not matches[0]:
+                            # Try normal tolerance
+                            matches = face_recognition.compare_faces(
+                                [known_encoding], 
+                                face_encoding, 
+                                tolerance=0.6  # Normal
+                            )
+                        
+                        if matches[0]:
+                            # Face recognized!
+                            print(f"Face matched: {astronaut.name}")
+                            
+                            # Send unlock command to ESP32
+                            try:
+                                success, message = send_unlock_to_esp32(
+                                    astronaut.name, 
+                                    astronaut.id
+                                )
+                            except:
+                                success = False
+                                message = "ESP32 communication unavailable"
+                            
+                            # Log authentication
+                            from .models import SystemLog
+                            SystemLog.objects.create(
+                                event_type='AUTH_SUCCESS',
+                                astronaut=astronaut,
+                                description=f"Face authenticated - ESP32 unlock: {message}",
+                                ip_address=request.META.get('REMOTE_ADDR')
+                            )
+                            
+                            return JsonResponse({
+                                'success': True,
+                                'astronaut_id': astronaut.id,
+                                'astronaut_name': astronaut.name,
+                                'esp32_unlock': success,
+                                'esp32_message': message
+                            })
+                    
+                    except Exception as match_error:
+                        print(f"Error matching with {astronaut.name}: {match_error}")
+                        continue
             
             # No match found
+            from .models import SystemLog
             SystemLog.objects.create(
                 event_type='AUTH_FAILURE',
                 description="Face not recognized - unknown individual",
@@ -94,16 +190,24 @@ def authenticate_face(request):
             
             return JsonResponse({
                 'success': False,
-                'message': 'Face not recognized. Please ensure you are an authorized user.'
+                'message': 'Face not recognized. Please ensure you are an authorized astronaut.'
             })
             
         except Exception as e:
+            print(f"Authentication error: {str(e)}")
+            import traceback
+            traceback.print_exc()
+            
             return JsonResponse({
                 'success': False,
                 'message': f'Authentication error: {str(e)}'
             })
     
-    return JsonResponse({'error': 'Invalid request - image required'}, status=400)
+    return JsonResponse({
+        'success': False,
+        'message': 'No image provided'
+    }, status=400)
+
 
 
 
@@ -289,6 +393,10 @@ def add_astronaut(request):
     """Add new astronaut with face photo"""
     if request.method == 'POST':
         try:
+            from PIL import Image
+            import numpy as np
+            import io
+            
             name = request.POST.get('name')
             astronaut_id = request.POST.get('astronaut_id')
             email = request.POST.get('email', '')
@@ -317,8 +425,17 @@ def add_astronaut(request):
                 name=name
             )
             
-            # Process face encoding
-            image = face_recognition.load_image_file(photo)
+            # Process face encoding with proper image handling
+            image_data = photo.read()
+            pil_image = Image.open(io.BytesIO(image_data))
+            
+            # Convert to RGB if needed
+            if pil_image.mode != 'RGB':
+                pil_image = pil_image.convert('RGB')
+            
+            # Convert to numpy array
+            image = np.array(pil_image)
+            
             face_encodings = face_recognition.face_encodings(image)
             
             if face_encodings:
@@ -368,6 +485,10 @@ def update_astronaut_face(request):
     """Update astronaut face encoding"""
     if request.method == 'POST':
         try:
+            from PIL import Image
+            import numpy as np
+            import io
+            
             astronaut_id = request.POST.get('astronaut_id')
             photo = request.FILES.get('photo')
             
@@ -379,8 +500,17 @@ def update_astronaut_face(request):
             
             astronaut = get_object_or_404(Astronaut, id=astronaut_id)
             
-            # Process face encoding
-            image = face_recognition.load_image_file(photo)
+            # Process face encoding with proper image handling
+            image_data = photo.read()
+            pil_image = Image.open(io.BytesIO(image_data))
+            
+            # Convert to RGB if needed
+            if pil_image.mode != 'RGB':
+                pil_image = pil_image.convert('RGB')
+            
+            # Convert to numpy array
+            image = np.array(pil_image)
+            
             face_encodings = face_recognition.face_encodings(image)
             
             if face_encodings:
