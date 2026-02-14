@@ -3,16 +3,22 @@ from dotenv import load_dotenv
 import os
 import hashlib
 
+
 # Load environment variables
 load_dotenv()
 
+
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Security settings
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-temporary-key')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+
+
 
 
 
@@ -27,6 +33,7 @@ INSTALLED_APPS = [
     'medical_inventory',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -37,7 +44,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'nasa.urls'
+
 
 TEMPLATES = [
     {
@@ -55,7 +64,9 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'nasa.wsgi.application'
+
 
 # Database
 # DATABASES = {
@@ -65,22 +76,25 @@ WSGI_APPLICATION = 'nasa.wsgi.application'
 #     }
 # }
 
+
 HOST = os.getenv('DB_HOST')
 PORT = os.getenv('DB_PORT')
 NAME = os.getenv('DB_NAME')
 USER = os.getenv('DB_USER')
 PASSWORD = os.getenv('DB_PASSWORD')
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': NAME,
-        'USER': USER,
-        "PASSWORD": PASSWORD,
-        "PORT": PORT,
-        "HOST": HOST,
+        'NAME': "defaultdb",
+        'USER': "avnadmin",
+        "PASSWORD": "AVNS__UHNCwe_qRkMs9s9EiA",
+        "PORT": 21603,
+        "HOST": "nasa-medical-jargudo08-bb19.f.aivencloud.com",
     }
-} 
+}
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -98,35 +112,42 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 # ESP32 Configuration
-ESP32_IP_ADDRESS = '192.168.1.100'  # UPDATE THIS to your ESP32's IP address
+ESP32_IP_ADDRESS = '192.168.1.53'  # UPDATE THIS to your ESP32's IP address
 # For serial communication (alternative to WiFi)
 # ESP32_SERIAL_PORT = '/dev/ttyUSB0'  # Linux
 ESP32_SERIAL_PORT = 'COM3'  # Windows
 ESP32_BAUD_RATE = 115200
 CAMERA_INDEX = int(os.getenv('CAMERA_INDEX', '0'))
 
+
 # Emergency Access PIN Configuration
 # For production, use a secure PIN and change this!
 # To generate a hash: hashlib.sha256('YOUR_PIN'.encode()).hexdigest()
 EMERGENCY_PIN_HASH = hashlib.sha256('1234'.encode()).hexdigest()
+
 
 # Logging configuration
 LOGGING = {
@@ -152,6 +173,7 @@ LOGGING = {
         },
     },
 }
+
 
 # Make sure these directories exist
 os.makedirs(os.path.join(MEDIA_ROOT, 'astronaut_photos'), exist_ok=True)

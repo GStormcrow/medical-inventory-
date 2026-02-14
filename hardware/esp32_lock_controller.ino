@@ -6,11 +6,11 @@
 // ============================================================================
 
 // WiFi credentials
-const char* ssid = "Daniel's S25+";           // Your WiFi name
-const char* password = "sigmarizzlee10";      // Your WiFi password
+const char* ssid = "FiOS-F6NV0";           // Your WiFi name
+const char* password = "wit4108shape889tux";      // Your WiFi password
 
 // Hardware pins
-const int LOCK_PIN = 25;                      // Pin connected to relay/solenoid
+const int LOCK_PIN = 2;                      // Pin connected to relay/solenoid
 const int DOOR_SENSOR_PIN = 26;               // Pin connected to door sensor (optional)
 
 // Lock timing
@@ -32,27 +32,28 @@ String lastUser = "";          // Who unlocked it
 void setup() {
   Serial.begin(115200);
   delay(1000);
- 
+  
   // Setup hardware pins
   pinMode(LOCK_PIN, OUTPUT);
   pinMode(DOOR_SENSOR_PIN, INPUT_PULLUP);
   digitalWrite(LOCK_PIN, LOW);  // Start locked
- 
+  
   Serial.println("\n=================================");
   Serial.println("NASA Medical Cabinet Lock");
   Serial.println("=================================\n");
- 
+  
   // Connect to WiFi
   connectToWiFi();
- 
+  
   // Setup web server endpoint (Django will call this)
   server.on("/face-unlock", HTTP_POST, handleFaceUnlock);
+  server.on("/unlock", HTTP_POST, handleFaceUnlock);
   server.on("/status", HTTP_GET, handleStatus);
   server.on("/", HTTP_GET, handleRoot);
- 
+  
   server.enableCORS(true);  // Allow Django to communicate
   server.begin();
- 
+  
   Serial.println("✓ Ready for face recognition!");
   Serial.print("ESP32 IP: ");
   Serial.println(WiFi.localIP());
@@ -65,12 +66,12 @@ void setup() {
 
 void loop() {
   server.handleClient();  // Check for commands from Django
- 
+  
   // Auto-relock after 30 seconds
   if (isUnlocked && (millis() - unlockTime > UNLOCK_DURATION)) {
     lockCabinet();
   }
- 
+  
   // Lock when door opens and closes (optional)
   if (isUnlocked && digitalRead(DOOR_SENSOR_PIN) == HIGH) {
     Serial.println("Door opened");
@@ -85,24 +86,25 @@ void loop() {
 
 void handleFaceUnlock() {
   Serial.println("\n👤 Face recognition request received");
- 
+  
   // Get astronaut info from Django
   String username = server.hasArg("username") ? server.arg("username") : "Unknown";
   String userId = server.hasArg("user_id") ? server.arg("user_id") : "0";
- 
+  
   Serial.print("Astronaut: ");
   Serial.println(username);
- 
+  
   // Unlock the cabinet
   unlockCabinet(username);
- 
+  
   // Send success response to Django
   String response = "{";
+  response += "\"success\":true,";           // ADD THIS LINE
   response += "\"status\":\"unlocked\",";
   response += "\"message\":\"Welcome " + username + "!\",";
   response += "\"unlock_duration\":30";
   response += "}";
- 
+  
   server.send(200, "application/json", response);
 }
 
@@ -113,20 +115,20 @@ void handleFaceUnlock() {
 void handleStatus() {
   String status = isUnlocked ? "unlocked" : "locked";
   int timeRemaining = 0;
- 
+  
   if (isUnlocked) {
     unsigned long elapsed = millis() - unlockTime;
     if (elapsed < UNLOCK_DURATION) {
       timeRemaining = (UNLOCK_DURATION - elapsed) / 1000;
     }
   }
- 
+  
   String response = "{";
   response += "\"lock\":\"" + status + "\",";
   response += "\"timeRemaining\":" + String(timeRemaining) + ",";
   response += "\"lastUser\":\"" + lastUser + "\"";
   response += "}";
- 
+  
   server.send(200, "application/json", response);
 }
 
@@ -143,20 +145,20 @@ void handleRoot() {
   html += "h1{color:#3b82f6;} .status{font-size:48px;margin:30px;}";
   html += ".locked{color:#ef4444;} .unlocked{color:#22c55e;}";
   html += "</style></head><body>";
-  html += "<h1>Medical Cabinet</h1>";
+  html += "<h1>🔒 Medical Cabinet</h1>";
   html += "<div class='status " + String(isUnlocked ? "unlocked" : "locked") + "'>";
-  html += isUnlocked ? "UNLOCKED" : "LOCKED";
+  html += isUnlocked ? "UNLOCKED 🔓" : "LOCKED 🔒";
   html += "</div>";
- 
+  
   if (isUnlocked) {
     unsigned long remaining = (UNLOCK_DURATION - (millis() - unlockTime)) / 1000;
     html += "<p>Auto-lock in: " + String(remaining) + " seconds</p>";
     html += "<p>Last unlocked by: " + lastUser + "</p>";
   }
- 
+  
   html += "<p>IP: " + WiFi.localIP().toString() + "</p>";
   html += "</body></html>";
- 
+  
   server.send(200, "text/html", html);
 }
 
@@ -169,8 +171,8 @@ void unlockCabinet(String user) {
   isUnlocked = true;
   unlockTime = millis();
   lastUser = user;
- 
-  Serial.println("UNLOCKED");
+  
+  Serial.println("🔓 UNLOCKED");
   Serial.print("By: ");
   Serial.println(user);
   Serial.println("Auto-lock in 30 seconds\n");
@@ -179,8 +181,8 @@ void unlockCabinet(String user) {
 void lockCabinet() {
   digitalWrite(LOCK_PIN, LOW);  // Deactivate solenoid
   isUnlocked = false;
- 
-  Serial.println("LOCKED\n");
+  
+  Serial.println("🔒 LOCKED\n");
 }
 
 // ============================================================================
@@ -192,12 +194,12 @@ void connectToWiFi() {
   delay(1000);
   WiFi.mode(WIFI_STA);
   delay(100);
- 
+  
   Serial.print("Connecting to WiFi: ");
   Serial.println(ssid);
- 
+  
   WiFi.begin(ssid, password);
- 
+  
   Serial.print("Connecting");
   int attempts = 0;
   while (WiFi.status() != WL_CONNECTED && attempts < 60) {
@@ -205,9 +207,9 @@ void connectToWiFi() {
     Serial.print(".");
     attempts++;
   }
- 
+  
   Serial.println();
- 
+  
   if (WiFi.status() == WL_CONNECTED) {
     Serial.println("\n✓✓✓ WiFi Connected! ✓✓✓");
     Serial.print("IP Address: ");
