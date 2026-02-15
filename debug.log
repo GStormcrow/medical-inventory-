@@ -14004,3 +14004,11 @@ Not Found: /favicon.ico
 "GET /static/css/medication-selection.css HTTP/1.1" 200 4964
 "POST /api/checkout/ HTTP/1.1" 200 72
 "GET / HTTP/1.1" 200 2627
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2627
+"GET /static/css/home.css HTTP/1.1" 304 0
+"GET /static/css/base.css HTTP/1.1" 304 0
+"GET /lockscreen/ HTTP/1.1" 200 7196
+"GET /static/css/lockscreen.css HTTP/1.1" 304 0
+"POST /api/authenticate/ HTTP/1.1" 200 61
