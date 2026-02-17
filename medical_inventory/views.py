@@ -25,30 +25,23 @@ import io
 import base64
 import os
 from datetime import timedelta
-from .models import (
-    Astronaut, Medication, Prescription, MedicationCheckout, 
-    InventoryLog, SystemLog, WarningLog, MedicationThreshold, 
-    EmergencyAccess
-)
+from .models import Astronaut, Medication, Prescription, MedicationCheckout, InventoryLog, SystemLog
 from .forms import MedicationForm
 
-# ESP32 Configuration
-ESP32_IP = getattr(settings, 'ESP32_IP_ADDRESS', '192.168.1.100')
+# Import for deep learning model (TensorFlow/Keras)
+try:
+    from tensorflow import keras
+    import tensorflow as tf
+    TENSORFLOW_AVAILABLE = True
+except ImportError:
+    TENSORFLOW_AVAILABLE = False
+    print("TensorFlow not available. Install with: pip install tensorflow")
 
-# ============================================================================
-# AUTHENTICATION DECORATORS AND HELPERS
-# ============================================================================
+# Import for color/shape analysis
+from sklearn.cluster import KMeans
 
-def staff_required(view_func):
-    """Decorator to require staff authentication for management pages"""
-    def wrapper(request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('medical_inventory:login')
-        if not request.user.is_staff:
-            messages.error(request, "You don't have permission to access this page.")
-            return redirect('medical_inventory:home')
-        return view_func(request, *args, **kwargs)
-    return wrapper
+# Configuration
+ESP32_IP = "192.168.1.100"
 
 
 # ============================================================================
@@ -193,7 +186,7 @@ def checkout_medication(request):
             
             astronaut = get_object_or_404(Astronaut, id=astronaut_id)
             checkouts_created = 0
-            warnings_triggered = []
+            # warnings_triggered = []
             
             for med_data in medications:
                 medication = get_object_or_404(Medication, id=med_data['medication_id'])
@@ -207,12 +200,12 @@ def checkout_medication(request):
                     }, status=400)
                 
                 # Check thresholds
-                warning_created, severity = check_medication_threshold(astronaut, medication, quantity)
-                if warning_created:
-                    warnings_triggered.append({
-                        'medication': medication.name,
-                        'severity': severity
-                    })
+                # warning_created, severity = check_medication_threshold(astronaut, medication, quantity)
+                # if warning_created:
+                #     warnings_triggered.append({
+                #         'medication': medication.name,
+                #         'severity': severity
+                #     })
                 
                 # Store previous quantity
                 previous_quantity = medication.current_quantity
@@ -253,11 +246,11 @@ def checkout_medication(request):
                 'success': True,
                 'checkouts': checkouts_created,
                 'unlock_status': unlock_success,
-                'warnings': warnings_triggered
+                # 'warnings': warnings_triggered
             }
             
-            if warnings_triggered:
-                response_data['warning_message'] = f"Warning: Excessive medication withdrawal detected for {', '.join([w['medication'] for w in warnings_triggered])}"
+            # if warnings_triggered:
+            #     response_data['warning_message'] = f"Warning: Excessive medication withdrawal detected for {', '.join([w['medication'] for w in warnings_triggered])}"
             
             return JsonResponse(response_data)
             
@@ -277,43 +270,43 @@ def check_medication_threshold(astronaut, medication, quantity):
     except:
         return False, None
     
-    warning_created = False
+    # warning_created = False
     max_severity = None
     
     # Check single dose limit
-    if quantity > threshold.single_dose_limit:
-        severity = 'CRITICAL' if quantity > threshold.single_dose_limit * 1.5 else 'HIGH'
-        WarningLog.objects.create(
-            astronaut=astronaut,
-            medication=medication,
-            quantity_taken=quantity,
-            warning_message=f"Single dose limit exceeded: {quantity} units (limit: {threshold.single_dose_limit})",
-            severity=severity
-        )
-        warning_created = True
-        max_severity = severity
+    # if quantity > threshold.single_dose_limit:
+    #     severity = 'CRITICAL' if quantity > threshold.single_dose_limit * 1.5 else 'HIGH'
+    #     WarningLog.objects.create(
+    #         astronaut=astronaut,
+    #         medication=medication,
+    #         quantity_taken=quantity,
+    #         warning_message=f"Single dose limit exceeded: {quantity} units (limit: {threshold.single_dose_limit})",
+    #         severity=severity
+    #     )
+    #     warning_created = True
+    #     max_severity = severity
     
     # Check daily limit
-    today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-    today_total = MedicationCheckout.objects.filter(
-        astronaut=astronaut,
-        medication=medication,
-        checkout_time__gte=today_start
-    ).aggregate(total=Sum('quantity'))['total'] or 0
-    today_total += quantity
+    # today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    # today_total = MedicationCheckout.objects.filter(
+    #     astronaut=astronaut,
+    #     medication=medication,
+    #     checkout_time__gte=today_start
+    # ).aggregate(total=Sum('quantity'))['total'] or 0
+    # today_total += quantity
     
-    if today_total > threshold.daily_limit:
-        WarningLog.objects.create(
-            astronaut=astronaut,
-            medication=medication,
-            quantity_taken=quantity,
-            warning_message=f"Daily limit exceeded: {today_total} units today (limit: {threshold.daily_limit})",
-            severity='CRITICAL'
-        )
-        warning_created = True
-        max_severity = 'CRITICAL'
+    # if today_total > threshold.daily_limit:
+    #     WarningLog.objects.create(
+    #         astronaut=astronaut,
+    #         medication=medication,
+    #         quantity_taken=quantity,
+    #         warning_message=f"Daily limit exceeded: {today_total} units today (limit: {threshold.daily_limit})",
+    #         severity='CRITICAL'
+    #     )
+    #     warning_created = True
+    #     max_severity = 'CRITICAL'
     
-    return warning_created, max_severity
+    # return warning_created, max_severity
 
 
 def send_esp32_unlock(astronaut):
@@ -396,14 +389,14 @@ def medication_detail(request, medication_id):
 # ASTRONAUT MANAGEMENT (PROTECTED)
 # ============================================================================
 
-@staff_required
+@login_required
 def manage_astronauts(request):
     """Astronaut management page"""
     return render(request, 'manage_astronauts.html')
 
 
 @csrf_exempt
-@staff_required
+@login_required
 def add_astronaut(request):
     """Add new astronaut with face encoding"""
     if request.method == 'POST':
@@ -483,7 +476,7 @@ def list_astronauts(request):
 
 
 @csrf_exempt
-@staff_required
+@login_required
 def update_astronaut_face(request):
     """Update astronaut face encoding with camera capture option"""
     if request.method == 'POST':
@@ -530,7 +523,7 @@ def update_astronaut_face(request):
 
 
 @csrf_exempt
-@staff_required
+@login_required
 def delete_astronaut(request, astronaut_id):
     """Delete astronaut"""
     if request.method == 'DELETE':
@@ -557,14 +550,14 @@ def delete_astronaut(request, astronaut_id):
 # MEDICATION MANAGEMENT (PROTECTED)
 # ============================================================================
 
-@staff_required
+@login_required
 def manage_medications(request):
     """Medication management page"""
     return render(request, 'manage_medications.html')
 
 
 @csrf_exempt
-@staff_required
+@login_required
 def add_medication(request):
     """Add new medication"""
     if request.method == 'POST':
@@ -598,7 +591,7 @@ def add_medication(request):
 
 
 @csrf_exempt
-@staff_required
+@login_required
 def update_medication_quantity(request):
     """Update medication quantity (for authorized users)"""
     if request.method == 'POST':
@@ -666,7 +659,7 @@ def list_medications(request):
 
 
 @csrf_exempt
-@staff_required
+@login_required
 def update_medication_image(request):
     """Update medication image"""
     if request.method == 'POST':
@@ -700,7 +693,7 @@ def update_medication_image(request):
 
 
 @csrf_exempt
-@staff_required
+@login_required
 def delete_medication(request, medication_id):
     """Delete medication"""
     if request.method == 'DELETE':
@@ -721,95 +714,95 @@ def delete_medication(request, medication_id):
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
-# ============================================================================
-# WARNING LOG
-# ============================================================================
+# # ============================================================================
+# # WARNING LOG
+# # ============================================================================
 
-@staff_required
-def warning_log_view(request):
-    """View medication warnings"""
-    warnings = WarningLog.objects.select_related('astronaut', 'medication', 'acknowledged_by').all()
+# @login_required
+# def warning_log_view(request):
+#     """View medication warnings"""
+#     warnings = WarningLog.objects.select_related('astronaut', 'medication', 'acknowledged_by').all()
     
-    # Filters
-    severity = request.GET.get('severity')
-    if severity:
-        warnings = warnings.filter(severity=severity)
+#     # Filters
+#     severity = request.GET.get('severity')
+#     if severity:
+#         warnings = warnings.filter(severity=severity)
     
-    acknowledged = request.GET.get('acknowledged')
-    if acknowledged == 'true':
-        warnings = warnings.filter(acknowledged=True)
-    elif acknowledged == 'false':
-        warnings = warnings.filter(acknowledged=False)
+#     acknowledged = request.GET.get('acknowledged')
+#     if acknowledged == 'true':
+#         warnings = warnings.filter(acknowledged=True)
+#     elif acknowledged == 'false':
+#         warnings = warnings.filter(acknowledged=False)
     
-    # Export to CSV if requested
-    if request.GET.get('export') == 'csv':
-        return export_warnings_csv(warnings)
+#     # Export to CSV if requested
+#     if request.GET.get('export') == 'csv':
+#         return export_warnings_csv(warnings)
     
-    stats = {
-        'total': warnings.count(),
-        'acknowledged': warnings.filter(acknowledged=True).count(),
-        'pending': warnings.filter(acknowledged=False).count(),
-        'critical': warnings.filter(severity='CRITICAL').count(),
-    }
+#     stats = {
+#         'total': warnings.count(),
+#         'acknowledged': warnings.filter(acknowledged=True).count(),
+#         'pending': warnings.filter(acknowledged=False).count(),
+#         'critical': warnings.filter(severity='CRITICAL').count(),
+#     }
     
-    return render(request, 'warning_log.html', {
-        'warnings': warnings[:100],
-        'stats': stats
-    })
-
-
-@staff_required
-@require_POST
-def acknowledge_warning(request, warning_id):
-    """Acknowledge a warning"""
-    warning = get_object_or_404(WarningLog, id=warning_id)
-    
-    astronaut, _ = Astronaut.objects.get_or_create(
-        user=request.user,
-        defaults={
-            'name': request.user.get_full_name() or request.user.username,
-            'astronaut_id': f'ADMIN_{request.user.id}'
-        }
-    )
-    
-    warning.acknowledged = True
-    warning.acknowledged_by = astronaut
-    warning.acknowledged_at = timezone.now()
-    warning.save()
-    
-    messages.success(request, "Warning acknowledged successfully.")
-    return redirect('medical_inventory:warning_log')
+#     return render(request, 'warning_log.html', {
+#         'warnings': warnings[:100],
+#         'stats': stats
+#     })
 
 
-def export_warnings_csv(warnings):
-    """Export warnings to CSV"""
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="warnings_{timezone.now().strftime("%Y%m%d_%H%M%S")}.csv"'
+# @login_required
+# @require_POST
+# def acknowledge_warning(request, warning_id):
+#     """Acknowledge a warning"""
+#     warning = get_object_or_404(WarningLog, id=warning_id)
     
-    writer = csv.writer(response)
-    writer.writerow([
-        'Date', 'Time', 'Astronaut', 'Medication', 'Quantity', 
-        'Severity', 'Message', 'Acknowledged', 'Acknowledged By', 'Acknowledged At'
-    ])
+#     astronaut, _ = Astronaut.objects.get_or_create(
+#         user=request.user,
+#         defaults={
+#             'name': request.user.get_full_name() or request.user.username,
+#             'astronaut_id': f'ADMIN_{request.user.id}'
+#         }
+#     )
     
-    for warning in warnings:
-        writer.writerow([
-            warning.timestamp.strftime('%Y-%m-%d'),
-            warning.timestamp.strftime('%H:%M:%S'),
-            warning.astronaut.name,
-            warning.medication.name,
-            warning.quantity_taken,
-            warning.get_severity_display(),
-            warning.warning_message,
-            'Yes' if warning.acknowledged else 'No',
-            warning.acknowledged_by.name if warning.acknowledged_by else '',
-            warning.acknowledged_at.strftime('%Y-%m-%d %H:%M') if warning.acknowledged_at else ''
-        ])
+#     warning.acknowledged = True
+#     warning.acknowledged_by = astronaut
+#     warning.acknowledged_at = timezone.now()
+#     warning.save()
     
-    return response
+#     messages.success(request, "Warning acknowledged successfully.")
+#     return redirect('medical_inventory:warning_log')
 
 
-@staff_required
+# def export_warnings_csv(warnings):
+#     """Export warnings to CSV"""
+#     response = HttpResponse(content_type='text/csv')
+#     response['Content-Disposition'] = f'attachment; filename="warnings_{timezone.now().strftime("%Y%m%d_%H%M%S")}.csv"'
+    
+#     writer = csv.writer(response)
+#     writer.writerow([
+#         'Date', 'Time', 'Astronaut', 'Medication', 'Quantity', 
+#         'Severity', 'Message', 'Acknowledged', 'Acknowledged By', 'Acknowledged At'
+#     ])
+    
+#     for warning in warnings:
+#         writer.writerow([
+#             warning.timestamp.strftime('%Y-%m-%d'),
+#             warning.timestamp.strftime('%H:%M:%S'),
+#             warning.astronaut.name,
+#             warning.medication.name,
+#             warning.quantity_taken,
+#             warning.get_severity_display(),
+#             warning.warning_message,
+#             'Yes' if warning.acknowledged else 'No',
+#             warning.acknowledged_by.name if warning.acknowledged_by else '',
+#             warning.acknowledged_at.strftime('%Y-%m-%d %H:%M') if warning.acknowledged_at else ''
+#         ])
+    
+#     return response
+
+
+@login_required
 def export_medications_csv(request):
     """Export medications to CSV"""
     response = HttpResponse(content_type='text/csv')
@@ -861,3 +854,296 @@ def recognize_pill(request):
         })
     
     return JsonResponse({'error': 'No image provided'}, status=400)
+
+
+# ===== ADMIN API ENDPOINTS =====
+
+@csrf_exempt
+def add_astronaut(request):
+    """Add new astronaut with face photo"""
+    if request.method == 'POST':
+        try:
+            name = request.POST.get('name')
+            astronaut_id = request.POST.get('astronaut_id')
+            password = request.POST.get('password', '')
+            photo = request.FILES.get('photo')
+            
+            if not all([name, astronaut_id, photo]):
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Name, Astronaut ID, and photo are required'
+                })
+            
+            # Create user account
+            from django.contrib.auth.models import User
+            username = astronaut_id.lower()
+            user = User.objects.create_user(
+                username=username,
+                email=f"{username}@nasa.gov",  # Auto-generate email
+                password=password if password else astronaut_id
+            )
+            
+            # Create astronaut
+            astronaut = Astronaut.objects.create(
+                user=user,
+                astronaut_id=astronaut_id,
+                name=name
+            )
+            
+            # Process face encoding
+            image = face_recognition.load_image_file(photo)
+            face_encodings = face_recognition.face_encodings(image)
+            
+            if face_encodings:
+                astronaut.face_encoding = pickle.dumps(face_encodings[0])
+                astronaut.save()
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Astronaut added successfully',
+                    'astronaut_id': astronaut.id
+                })
+            else:
+                astronaut.delete()
+                user.delete()
+                return JsonResponse({
+                    'success': False,
+                    'message': 'No face detected in photo. Please use a clear, front-facing photo.'
+                })
+                
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+def list_astronauts(request):
+    """List all astronauts"""
+    astronauts = Astronaut.objects.all()
+    
+    data = [{
+        'id': a.id,
+        'name': a.name,
+        'astronaut_id': a.astronaut_id,
+        'has_face_encoding': a.face_encoding is not None,
+        'photo_url': None  # We don't store photos, just encodings
+    } for a in astronauts]
+    
+    return JsonResponse({'astronauts': data})
+
+
+@csrf_exempt
+def update_astronaut_face(request):
+    """Update astronaut face encoding"""
+    if request.method == 'POST':
+        try:
+            astronaut_id = request.POST.get('astronaut_id')
+            photo = request.FILES.get('photo')
+            
+            if not all([astronaut_id, photo]):
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Astronaut ID and photo are required'
+                })
+            
+            astronaut = get_object_or_404(Astronaut, id=astronaut_id)
+            
+            # Process face encoding
+            image = face_recognition.load_image_file(photo)
+            face_encodings = face_recognition.face_encodings(image)
+            
+            if face_encodings:
+                astronaut.face_encoding = pickle.dumps(face_encodings[0])
+                astronaut.save()
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Face encoding updated successfully'
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'No face detected in photo'
+                })
+                
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+def delete_astronaut(request, astronaut_id):
+    """Delete astronaut"""
+    if request.method == 'DELETE':
+        try:
+            astronaut = get_object_or_404(Astronaut, id=astronaut_id)
+            user = astronaut.user
+            astronaut.delete()
+            user.delete()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Astronaut deleted successfully'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+def add_medication(request):
+    """Add new medication with image"""
+    if request.method == 'POST':
+        try:
+            medication = Medication.objects.create(
+                name=request.POST.get('name'),
+                generic_name=request.POST.get('generic_name', ''),
+                medication_type=request.POST.get('medication_type'),
+                dosage=request.POST.get('dosage'),
+                description=request.POST.get('description', ''),
+                current_quantity=int(request.POST.get('current_quantity', 0)),
+                minimum_quantity=int(request.POST.get('minimum_quantity', 0)),
+                container_location=request.POST.get('container_location'),
+                expiration_date=request.POST.get('expiration_date') or None,
+                pill_image=request.FILES.get('pill_image')
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Medication added successfully',
+                'medication_id': medication.id
+            })
+                
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@csrf_exempt  
+def list_medications(request):
+    """List all medications"""
+    medications = Medication.objects.all()
+    
+    data = [{
+        'id': m.id,
+        'name': m.name,
+        'generic_name': m.generic_name,
+        'medication_type': m.get_medication_type_display(),
+        'dosage': m.dosage,
+        'current_quantity': m.current_quantity,
+        'minimum_quantity': m.minimum_quantity,
+        'container_location': m.container_location,
+        'expiration_date': m.expiration_date.strftime('%Y-%m-%d') if m.expiration_date else None,
+        'image_url': m.pill_image.url if m.pill_image else None
+    } for m in medications]
+    
+    return JsonResponse({'medications': data})
+
+
+@csrf_exempt
+def update_medication_image(request):
+    """Update medication image"""
+    if request.method == 'POST':
+        try:
+            medication_id = request.POST.get('medication_id')
+            image = request.FILES.get('image')
+            
+            if not all([medication_id, image]):
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Medication ID and image are required'
+                })
+            
+            medication = get_object_or_404(Medication, id=medication_id)
+            medication.pill_image = image
+            medication.save()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Image updated successfully',
+                'image_url': medication.pill_image.url
+            })
+                
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+def delete_medication(request, medication_id):
+    """Delete medication"""
+    if request.method == 'DELETE':
+        try:
+            medication = get_object_or_404(Medication, id=medication_id)
+            medication.delete()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Medication deleted successfully'
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+def manage_astronauts(request):
+    """Astronaut management page"""
+    return render(request, 'manage_astronauts.html')
+
+
+def manage_medications(request):
+    """Medication management page"""
+    return render(request, 'manage_medications.html')
+
+def inventory_dashboard(request):
+    # Your existing view code
+    medications = Medication.objects.all()
+    total_medications = medications.count()
+    low_stock_count = medications.filter(current_quantity__lte=10).count()
+    # ... other context variables
+    
+    context = {
+        'medications': medications,
+        'total_medications': total_medications,
+        'low_stock_count': low_stock_count,
+        # ... other context
+    }
+    return render(request, 'inventory_dashboard.html', context)
+
+def add_medication(request):
+    if request.method == 'POST':
+        form = MedicationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Medication added successfully!')
+            return redirect('medical_inventory:inventory_dashboard')  # Adjust to your URL name
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = MedicationForm()
+    
+    return render(request, 'add_medication.html', {'form': form})

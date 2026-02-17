@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Medication - NASA Medical Inventory{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/inventory.css' %}">
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        color: #000;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #0066cc;
+        box-shadow: 0 0 0 3px rgba(0,102,204,0.1);
+    }
+    .btn-submit {
+        background: #0066cc;
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-right: 1rem;
+    }
+    .btn-submit:hover {
+        background: #0052a3;
+    }
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0 0 0;
+    }
+    .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+    }
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Add New Medication</h1>
+</div>
+
+<div class="form-container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Medication Name *</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.medication_type.id_for_label }}">Type *</label>
+            {{ form.medication_type }}
+            {{ form.medication_type.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.dosage.id_for_label }}">Dosage *</label>
+            {{ form.dosage }}
+            {{ form.dosage.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.current_quantity.id_for_label }}">Current Quantity *</label>
+            {{ form.current_quantity }}
+            {{ form.current_quantity.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.minimum_quantity.id_for_label }}">Minimum Quantity *</label>
+            {{ form.minimum_quantity }}
+            {{ form.minimum_quantity.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.container_location.id_for_label }}">Container Location *</label>
+            {{ form.container_location }}
+            {{ form.container_location.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.expiration_date.id_for_label }}">Expiration Date</label>
+            {{ form.expiration_date }}
+            {{ form.expiration_date.errors }}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn-submit">Add Medication</button>
+            <a href="{% url 'medical_inventory:inventory_dashboard' %}" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

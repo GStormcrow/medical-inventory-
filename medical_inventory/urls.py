@@ -15,7 +15,11 @@ urlpatterns = [
     
     # Inventory pages
     path('inventory/', views.inventory_dashboard, name='inventory_dashboard'),
-    path('inventory/<int:medication_id>/', views.medication_detail, name='medication_detail'),
+     path('<int:medication_id>/', views.medication_detail, name='medication_detail'),
+    path('add/', views.add_medication, name='add_medication'),
+    # path('inventory/<int:medication_id>/', views.medication_detail, name='medication_detail'),
+    # path('<int:id>/', views.medication_detail, name='medication_detail'),
+    # path('inventory/add/', views.add_medication, name='add_medication'),
     
     # Pill recognition
     path('pill-recognition/', views.pill_recognition, name='pill_recognition'),
@@ -25,8 +29,8 @@ urlpatterns = [
     path('manage/medications/', views.manage_medications, name='manage_medications'),
     
     # Warning System
-    path('warnings/', views.warning_log_view, name='warning_log'),
-    path('warnings/<int:warning_id>/acknowledge/', views.acknowledge_warning, name='acknowledge_warning'),
+    # path('warnings/', views.warning_log_view, name='warning_log'),
+    # path('warnings/<int:warning_id>/acknowledge/', views.acknowledge_warning, name='acknowledge_warning'),
     
     # API endpoints - Face Authentication
     path('api/authenticate/', views.authenticate_face, name='authenticate_face'),
