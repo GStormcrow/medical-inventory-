@@ -13870,3 +13870,21 @@ Not Found: /favicon.ico
 "GET /favicon.ico HTTP/1.1" 404 9824
 "POST /api/medications/add/ HTTP/1.1" 302 0
 "GET /inventory/ HTTP/1.1" 200 10584
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 179
+"GET / HTTP/1.1" 200 2627
+Not Found: /static/css/home.css
+"GET /static/css/home.css HTTP/1.1" 404 179
+"GET /lockscreen/ HTTP/1.1" 200 7196
+Not Found: /static/css/lockscreen.css
+"GET /static/css/lockscreen.css HTTP/1.1" 404 179
+"POST /api/authenticate/ HTTP/1.1" 200 71
+"GET /medication-selection/1/ HTTP/1.1" 200 17457
+Not Found: /static/css/medication-selection.css
+"GET /static/css/medication-selection.css HTTP/1.1" 404 179
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2627
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2627
