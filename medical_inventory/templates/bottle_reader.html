@@ -500,41 +500,59 @@
     }
 
     function displayResults(data) {
-        resultsSection.classList.add('show');
+    resultsSection.classList.add('show');
+    
+    document.getElementById('medicationName').textContent = data.medication_name || 'Unknown Medication';
+    document.getElementById('confidenceBadge').textContent = `${data.confidence}% confidence`;
+    
+    const matchInfo = document.getElementById('matchInfo');
+    const locationCard = document.getElementById('locationCard');
+    const notFoundCard = document.getElementById('notFoundCard');
+    
+    if (data.database_match && data.database_match.exists_in_system) {
+        // FOUND IN DATABASE
+        matchInfo.style.display = 'block';
+        locationCard.style.display = 'block';
+        notFoundCard.style.display = 'none';
         
-        document.getElementById('medicationName').textContent = data.medication_name || 'Unknown Medication';
-        document.getElementById('confidenceBadge').textContent = `${data.confidence}% confidence`;
+        document.getElementById('dbName').textContent = data.database_match.name;
+        document.getElementById('dbDosage').textContent = data.database_match.dosage || 'Not specified';
+        document.getElementById('dbQuantity').textContent = data.database_match.current_quantity + ' units';
+        document.getElementById('matchConfidence').textContent = `${data.database_match.match_confidence}%`;
         
-        // Show database match info if found
-        const matchInfo = document.getElementById('matchInfo');
-        const locationCard = document.getElementById('locationCard');
-        const notFoundCard = document.getElementById('notFoundCard');
-        const addBtn = document.getElementById('addToInventory');
+        // DISPLAY LOCATION PROMINENTLY
+        const location = data.inventory_location || 'Location not set';
+        document.getElementById('locationValue').textContent = location;
         
-        if (data.database_match && data.database_match.exists_in_system) {
-            matchInfo.style.display = 'block';
-            locationCard.style.display = 'block';
-            notFoundCard.style.display = 'none';
-            addBtn.style.display = 'none';
-            
-            document.getElementById('dbName').textContent = data.database_match.name;
-            document.getElementById('dbDosage').textContent = data.database_match.dosage || 'Not specified';
-            document.getElementById('dbQuantity').textContent = data.database_match.current_quantity;
-            document.getElementById('matchConfidence').textContent = `${data.database_match.match_confidence}%`;
-            
-            document.getElementById('locationValue').textContent = data.inventory_location || 'Location not set';
+        if (location === 'Location not set in system' || location === 'Location not set') {
+            document.getElementById('locationSubtext').textContent = 'Please set location in inventory system';
+            document.getElementById('locationValue').style.color = '#FFC107';
         } else {
-            matchInfo.style.display = 'none';
-            locationCard.style.display = 'none';
-            notFoundCard.style.display = 'block';
-            addBtn.style.display = 'inline-block';
-            
-            document.getElementById('detectedName').textContent = data.medication_name;
+            document.getElementById('locationSubtext').textContent = `Go to this location to find ${data.medication_name}`;
+            document.getElementById('locationValue').style.color = '#FC3D21';
         }
         
-        // Raw text
-        document.getElementById('rawText').textContent = data.raw_text || 'No text extracted';
+        // SHOW UNLOCK STATUS
+        if (data.unlock_status === true) {
+            showStatus('Container unlocked! You have 30 seconds to retrieve medication.', 'success');
+        } else if (data.unlock_status === false && data.unlock_message) {
+            showStatus(data.unlock_message, 'warning');
+        }
+        
+    } else {
+        // NOT FOUND IN DATABASE
+        matchInfo.style.display = 'none';
+        locationCard.style.display = 'none';
+        notFoundCard.style.display = 'block';
+        
+        document.getElementById('detectedName').textContent = data.medication_name;
+        
+        showStatus('Medication not in database - container remains locked', 'warning');
     }
+    
+    // Raw text
+    document.getElementById('rawText').textContent = data.raw_text || 'No text extracted';
+}
 
     function showStatus(message, type) {
         statusMessage.textContent = message;

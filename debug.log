@@ -15151,3 +15151,834 @@ Not Found: /accounts/login/
 "GET /warnings/ HTTP/1.1" 302 0
 Not Found: /accounts/login/
 "GET /accounts/login/?next=/warnings/ HTTP/1.1" 404 10693
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2621
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 10665
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 17440
+"POST /api/checkout/ HTTP/1.1" 200 72
+"GET / HTTP/1.1" 200 2621
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2621
+"GET /static/css/base.css HTTP/1.1" 304 0
+"GET /static/css/home.css HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 10665
+"GET /bottle-reader/ HTTP/1.1" 200 18883
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 770
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 636
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2621
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/css/lockscreen.css HTTP/1.1" 304 0
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 17440
+"GET /static/css/medication-selection.css HTTP/1.1" 304 0
+"GET /manage/astronauts/ HTTP/1.1" 200 10050
+"GET /static/css/admin-pages.css HTTP/1.1" 304 0
+"GET /api/astronauts/list/ HTTP/1.1" 200 328
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 17440
+"GET /manage/astronauts/ HTTP/1.1" 200 10050
+"GET /api/astronauts/list/ HTTP/1.1" 200 328
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2621
+"GET /pill-recognition/ HTTP/1.1" 200 6165
+"GET /static/css/pill-recognition.css HTTP/1.1" 304 0
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"GET / HTTP/1.1" 200 2621
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+Internal Server Error: /api/read-pill-bottle/
+"POST /api/read-pill-bottle/ HTTP/1.1" 500 167
+Internal Server Error: /api/read-pill-bottle/
+"POST /api/read-pill-bottle/ HTTP/1.1" 500 167
+C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\medical_inventory\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 595
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 629
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 917
+C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\medical_inventory\views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 17440
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2621
+"GET /manage/medications/ HTTP/1.1" 200 15575
+"GET /api/medications/list/ HTTP/1.1" 200 1633
+"GET /manage/astronauts/ HTTP/1.1" 200 10050
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"GET /api/astronauts/list/ HTTP/1.1" 200 328
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /inventory/ HTTP/1.1" 200 10576
+"GET /static/css/inventory.css HTTP/1.1" 304 0
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 17440
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2621
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\medical_inventory\views.py", line 60, in home
+    return render(request, 'home.html')
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'bottle_recognition' not found. 'bottle_recognition' is not a valid view function or pattern name.
+"GET / HTTP/1.1" 500 171506
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\medical_inventory\views.py", line 60, in home
+    return render(request, 'home.html')
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 172, in render
+    return self._render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 164, in _render
+    return self.nodelist.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 1018, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\base.py", line 979, in render_annotated
+    return self.render(context)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\template\defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\venv\lib\site-packages\django\urls\resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'bottle_recognition' not found. 'bottle_recognition' is not a valid view function or pattern name.
+"GET / HTTP/1.1" 500 171506
+"GET / HTTP/1.1" 200 2623
+"GET / HTTP/1.1" 200 2623
+"GET /pill-recognition/ HTTP/1.1" 200 6165
+"GET / HTTP/1.1" 200 2623
+"GET / HTTP/1.1" 200 2620
+"GET / HTTP/1.1" 200 2620
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"GET / HTTP/1.1" 200 2620
+"GET /manage/medications/ HTTP/1.1" 200 15575
+"GET /api/medications/list/ HTTP/1.1" 200 1633
+"GET /inventory/ HTTP/1.1" 200 10576
+"GET /manage/astronauts/ HTTP/1.1" 200 10050
+"GET /api/astronauts/list/ HTTP/1.1" 200 328
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /manage/medications/ HTTP/1.1" 200 15575
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /api/medications/list/ HTTP/1.1" 200 1633
+"GET /inventory/ HTTP/1.1" 200 10576
+"GET /inventory/ HTTP/1.1" 200 10576
+"GET /inventory/ HTTP/1.1" 200 10419
+- Broken pipe from ('127.0.0.1', 59099)
+"GET /inventory/ HTTP/1.1" 200 10576
+"GET /inventory/ HTTP/1.1" 200 10576
+"GET /inventory/ HTTP/1.1" 200 10485
+"GET / HTTP/1.1" 200 2620
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"GET / HTTP/1.1" 200 2632
+"GET /manage/medications/ HTTP/1.1" 200 15575
+"GET /api/medications/list/ HTTP/1.1" 200 1876
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 860
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 642
+"GET /inventory/ HTTP/1.1" 200 11255
+"GET /manage/medications/ HTTP/1.1" 200 15575
+"GET /api/medications/list/ HTTP/1.1" 200 1876
+Not Found: /inventory/1/
+"GET /inventory/1/ HTTP/1.1" 404 10668
+Not Found: /inventory/1/
+"GET /inventory/1/ HTTP/1.1" 404 10668
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"GET /manage/astronauts/ HTTP/1.1" 200 10050
+"GET /api/astronauts/list/ HTTP/1.1" 200 328
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /inventory/ HTTP/1.1" 200 11255
+"GET /static/default-avatar.png HTTP/1.1" 404 1981
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"GET /inventory/ HTTP/1.1" 200 11255
+"GET /manage/medications/ HTTP/1.1" 200 15575
+"GET /api/medications/list/ HTTP/1.1" 200 1876
+Not Found: /inventory/1/
+"GET /inventory/1/ HTTP/1.1" 404 10668
+Not Found: /inventory/9/
+"GET /inventory/9/ HTTP/1.1" 404 10668
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\nasa\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 18582
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 18582
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"GET /static/css/base.css HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 10665
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 691
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 983
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/2/ HTTP/1.1" 200 18582
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 67
+"GET /medication-selection/3/ HTTP/1.1" 200 18589
+"POST /api/checkout/ HTTP/1.1" 200 73
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /static/css/base.css HTTP/1.1" 304 0
+"GET /static/css/home.css HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 10665
+"GET /inventory/ HTTP/1.1" 200 11255
+"GET /static/css/inventory.css HTTP/1.1" 304 0
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/css/lockscreen.css HTTP/1.1" 304 0
+"POST /api/authenticate/ HTTP/1.1" 200 67
+"GET /medication-selection/3/ HTTP/1.1" 200 18589
+"GET /static/css/medication-selection.css HTTP/1.1" 304 0
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /static/css/home.css HTTP/1.1" 304 0
+"GET /static/css/base.css HTTP/1.1" 304 0
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 641
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 550
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 645
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 575
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 478
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 461
+"GET /inventory/ HTTP/1.1" 200 11255
+"GET /static/css/inventory.css HTTP/1.1" 304 0
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 602
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 680
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/css/lockscreen.css HTTP/1.1" 304 0
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/36/ HTTP/1.1" 200 18583
+"GET /static/css/medication-selection.css HTTP/1.1" 304 0
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+Watching for file changes with StatReloader
+C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\medical_inventory\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /static/css/home.css HTTP/1.1" 304 0
+"GET /static/css/base.css HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 10665
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/css/lockscreen.css HTTP/1.1" 304 0
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/36/ HTTP/1.1" 200 18583
+"GET /static/css/medication-selection.css HTTP/1.1" 304 0
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+C:\Users\rampa\OneDrive\Documents\NASA Hunch\medical-inventory-\medical_inventory\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /static/css/base.css HTTP/1.1" 304 0
+"GET /static/css/home.css HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 10665
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/css/lockscreen.css HTTP/1.1" 304 0
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/36/ HTTP/1.1" 200 18583
+"GET /static/css/medication-selection.css HTTP/1.1" 304 0
+"POST /api/checkout/ HTTP/1.1" 200 72
+"GET / HTTP/1.1" 200 2632
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /static/css/base.css HTTP/1.1" 304 0
+"GET /static/css/home.css HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 10665
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /static/css/lockscreen.css HTTP/1.1" 304 0
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/36/ HTTP/1.1" 200 18583
+"GET /static/css/medication-selection.css HTTP/1.1" 304 0
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/36/ HTTP/1.1" 200 18583
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"GET /inventory/ HTTP/1.1" 200 11255
+"GET /static/css/inventory.css HTTP/1.1" 304 0
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/36/ HTTP/1.1" 200 18583
+"POST /api/checkout/ HTTP/1.1" 200 73
+"GET / HTTP/1.1" 200 2632
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 2632
+"GET /lockscreen/ HTTP/1.1" 200 7190
+"POST /api/authenticate/ HTTP/1.1" 200 61
+"GET /medication-selection/36/ HTTP/1.1" 200 18583
+"POST /api/checkout/ HTTP/1.1" 200 72
+"GET / HTTP/1.1" 200 2632
+"GET /bottle-reader/ HTTP/1.1" 200 19652
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 646
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 598
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 853
+"POST /api/read-pill-bottle/ HTTP/1.1" 200 1388
+"GET /inventory/ HTTP/1.1" 200 11253
+"GET /static/css/inventory.css HTTP/1.1" 304 0

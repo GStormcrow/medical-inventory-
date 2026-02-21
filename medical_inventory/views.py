@@ -2030,7 +2030,7 @@ def bottle_reading_page(request):
 
 @csrf_exempt
 def read_pill_bottle(request):
-    """API endpoint for reading pill bottles using OCR"""
+    """API endpoint for reading pill bottles using OCR and triggering unlock"""
     if request.method == 'POST' and request.FILES.get('image'):
         try:
             image_file = request.FILES['image']
@@ -2053,6 +2053,28 @@ def read_pill_bottle(request):
                 # Process image
                 result = reader.process_bottle_image(temp_path)
                 
+                # If medication was successfully detected, unlock the container
+                if result.get('success') and result.get('database_match'):
+                    medication_name = result.get('medication_name', 'Unknown')
+                    
+                    print(f"\nAttempting to unlock container for: {medication_name}")
+                    
+                    # Send unlock command to ESP32
+                    unlock_success = send_esp32_unlock_for_bottle(medication_name)
+                    
+                    # Add unlock status to result
+                    result['unlock_status'] = unlock_success
+                    
+                    if unlock_success:
+                        print(f"Container unlocked successfully for {medication_name}")
+                        result['unlock_message'] = 'Container unlocked - you have 30 seconds to retrieve medication'
+                    else:
+                        print(f"Warning: Container unlock failed for {medication_name}")
+                        result['unlock_message'] = 'Warning: Container unlock failed - please try manually'
+                else:
+                    result['unlock_status'] = False
+                    result['unlock_message'] = 'Medication not found - container remains locked'
+                
             finally:
                 # ALWAYS delete the temporary file
                 try:
@@ -2071,13 +2093,43 @@ def read_pill_bottle(request):
             return JsonResponse({
                 'success': False,
                 'error': str(e),
-                'message': f'Error: {str(e)}'
+                'message': f'Error: {str(e)}',
+                'unlock_status': False
             }, status=500)
     
     return JsonResponse({
         'success': False,
-        'message': 'POST request with image file required'
+        'message': 'POST request with image file required',
+        'unlock_status': False
     }, status=400)
+def send_esp32_unlock_for_bottle(medication_name):
+    """Send unlock command to ESP32 after bottle detection"""
+    esp32_ip = getattr(settings, 'ESP32_IP_ADDRESS', '192.168.1.53')
+    
+    try:
+        # Send unlock request to ESP32
+        response = requests.post(
+            f'http://{esp32_ip}/unlock',
+            json={
+                'username': 'Bottle Scanner',
+                'user_id': 'bottle_scan',
+                'medication': medication_name,
+                'timestamp': timezone.now().isoformat(),
+                'source': 'bottle_reader'
+            },
+            timeout=5
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            return data.get('success', False)
+        else:
+            print(f"ESP32 returned status code: {response.status_code}")
+            return False
+            
+    except requests.exceptions.RequestException as e:
+        print(f"Error communicating with ESP32: {e}")
+        return False
 
 
 @csrf_exempt  

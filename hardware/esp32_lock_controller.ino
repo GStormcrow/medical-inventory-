@@ -40,6 +40,7 @@ void setup() {
   
   Serial.println("\n=================================");
   Serial.println("NASA Medical Cabinet Lock");
+  Serial.println("Dual Mode: WiFi + Serial");
   Serial.println("=================================\n");
   
   // Connect to WiFi
@@ -54,9 +55,10 @@ void setup() {
   server.enableCORS(true);  // Allow Django to communicate
   server.begin();
   
-  Serial.println("✓ Ready for face recognition!");
-  Serial.print("ESP32 IP: ");
+  Serial.println("Ready for commands!");
+  Serial.print("WiFi IP: ");
   Serial.println(WiFi.localIP());
+  Serial.println("Serial: USB");
   Serial.println("=================================\n");
 }
 
@@ -66,6 +68,9 @@ void setup() {
 
 void loop() {
   server.handleClient();  // Check for commands from Django
+  
+  // NEW: Handle Serial commands
+  handleSerialCommands();
   
   // Auto-relock after 30 seconds
   if (isUnlocked && (millis() - unlockTime > UNLOCK_DURATION)) {
@@ -81,11 +86,72 @@ void loop() {
 }
 
 // ============================================================================
+// NEW: SERIAL COMMAND HANDLER
+// ============================================================================
+
+void handleSerialCommands() {
+  if (Serial.available() > 0) {
+    String command = Serial.readStringUntil('\n');
+    command.trim();
+    
+    // Ignore empty or short commands
+    if (command.length() < 5) {
+      return;
+    }
+    
+    // Only process JSON commands (starts with {)
+    if (!command.startsWith("{")) {
+      return;
+    }
+    
+    Serial.println("Serial command: " + command);
+    
+    // Simple parsing - look for action
+    String action = "";
+    String username = "Serial User";
+    
+    // Extract action
+    if (command.indexOf("\"action\"") > 0) {
+      if (command.indexOf("\"unlock\"") > 0) {
+        action = "unlock";
+      } else if (command.indexOf("\"lock\"") > 0) {
+        action = "lock";
+      } else if (command.indexOf("\"status\"") > 0) {
+        action = "status";
+      }
+    }
+    
+    // Extract username if present
+    int usernamePos = command.indexOf("\"username\"");
+    if (usernamePos > 0) {
+      int colonPos = command.indexOf(":", usernamePos);
+      int quoteStart = command.indexOf("\"", colonPos);
+      int quoteEnd = command.indexOf("\"", quoteStart + 1);
+      if (quoteStart > 0 && quoteEnd > quoteStart) {
+        username = command.substring(quoteStart + 1, quoteEnd);
+      }
+    }
+    
+    // Execute action
+    if (action == "unlock") {
+      unlockCabinet(username);
+      Serial.println("{\"success\":true,\"status\":\"unlocked\"}");
+    } else if (action == "lock") {
+      lockCabinet();
+      Serial.println("{\"success\":true,\"status\":\"locked\"}");
+    } else if (action == "status") {
+      String status = isUnlocked ? "unlocked" : "locked";
+      Serial.println("{\"success\":true,\"status\":\"" + status + "\"}");
+    }
+  }
+}
+
+// ============================================================================
 // FACE UNLOCK HANDLER - Called by Django when face is recognized
 // ============================================================================
 
 void handleFaceUnlock() {
-  Serial.println("\n👤 Face recognition request received");
+  Serial.println("\nWiFi unlock request received");
   
   // Get astronaut info from Django
   String username = server.hasArg("username") ? server.arg("username") : "Unknown";
@@ -99,7 +165,7 @@ void handleFaceUnlock() {
   
   // Send success response to Django
   String response = "{";
-  response += "\"success\":true,";           // ADD THIS LINE
+  response += "\"success\":true,";
   response += "\"status\":\"unlocked\",";
   response += "\"message\":\"Welcome " + username + "!\",";
   response += "\"unlock_duration\":30";
@@ -145,9 +211,9 @@ void handleRoot() {
   html += "h1{color:#3b82f6;} .status{font-size:48px;margin:30px;}";
   html += ".locked{color:#ef4444;} .unlocked{color:#22c55e;}";
   html += "</style></head><body>";
-  html += "<h1>🔒 Medical Cabinet</h1>";
+  html += "<h1>Medical Cabinet</h1>";
   html += "<div class='status " + String(isUnlocked ? "unlocked" : "locked") + "'>";
-  html += isUnlocked ? "UNLOCKED 🔓" : "LOCKED 🔒";
+  html += isUnlocked ? "UNLOCKED" : "LOCKED";
   html += "</div>";
   
   if (isUnlocked) {
@@ -157,6 +223,7 @@ void handleRoot() {
   }
   
   html += "<p>IP: " + WiFi.localIP().toString() + "</p>";
+  html += "<p>Mode: WiFi + Serial</p>";
   html += "</body></html>";
   
   server.send(200, "text/html", html);
@@ -172,7 +239,7 @@ void unlockCabinet(String user) {
   unlockTime = millis();
   lastUser = user;
   
-  Serial.println("🔓 UNLOCKED");
+  Serial.println("UNLOCKED");
   Serial.print("By: ");
   Serial.println(user);
   Serial.println("Auto-lock in 30 seconds\n");
@@ -182,7 +249,7 @@ void lockCabinet() {
   digitalWrite(LOCK_PIN, LOW);  // Deactivate solenoid
   isUnlocked = false;
   
-  Serial.println("🔒 LOCKED\n");
+  Serial.println("LOCKED\n");
 }
 
 // ============================================================================
@@ -211,16 +278,15 @@ void connectToWiFi() {
   Serial.println();
   
   if (WiFi.status() == WL_CONNECTED) {
-    Serial.println("\n✓✓✓ WiFi Connected! ✓✓✓");
+    Serial.println("\nWiFi Connected!");
     Serial.print("IP Address: ");
     Serial.println(WiFi.localIP());
     Serial.print("Signal: ");
     Serial.print(WiFi.RSSI());
     Serial.println(" dBm\n");
   } else {
-    Serial.println("\n✗✗✗ WiFi Failed! ✗✗✗");
-    Serial.println("Check SSID and password\n");
-    delay(5000);
-    ESP.restart();  // Restart and try again
+    Serial.println("\nWiFi Failed!");
+    Serial.println("Will use Serial mode only\n");
+    // Don't restart - continue with Serial mode
   }
 }
