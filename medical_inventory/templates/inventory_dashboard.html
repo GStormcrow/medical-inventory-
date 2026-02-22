@@ -10,9 +10,12 @@
 {% block content %}
 <div class="page-header">
     <h1>Inventory Dashboard</h1>
-    <a href="{% url 'medical_inventory:add_medication' %}" class="btn-add">
+    {% comment %} <a href="{% url 'medical_inventory:add_medication' %}" class="btn-add">
         + Add New Medication
-    </a>
+    </a> {% endcomment %}
+    <br>
+    <button class="view-detail-btn" onclick="window.location.href='{% url 'medical_inventory:inventory_graph' %}'">Trends Graph</button>
+
 </div>
 
 <div class="container">
@@ -38,7 +41,7 @@
             <input type="text" id="searchInput" placeholder="Search medications..." onkeyup="filterTable()">
             <select id="typeFilter" onchange="filterTable()">
                 <option value="">All Types</option>
-                <option value="ANALGESIC">Pain Relief</option>
+                <option value="PAINRELIEF">Pain Relief</option>
                 <option value="ANTIBIOTIC">Antibiotic</option>
                 <option value="ANTINAUSEA">Anti-Nausea</option>
                 <option value="SLEEP_AID">Sleep Aid</option>

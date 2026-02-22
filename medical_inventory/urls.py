@@ -1,5 +1,10 @@
 from django.urls import path
+
+from nasa import settings
 from . import views
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'medical_inventory'
 
@@ -50,6 +55,6 @@ urlpatterns = [
     path('api/medications/update-quantity/', views.update_medication_quantity, name='update_medication_quantity'),
     path('api/medications/delete/<int:medication_id>/', views.delete_medication, name='delete_medication'),
     
-    # CSV Export
-    path('api/medications/export-csv/', views.export_medications_csv, name='export_medications_csv'),
-]
+    path('inventory/graph/', views.medication_inventory_graph, name='inventory_graph'),
+    path('api/medications/history/', views.medication_history_api, name='medication_history_api'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

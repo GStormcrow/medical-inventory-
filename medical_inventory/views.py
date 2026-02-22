@@ -858,6 +858,7 @@ def recognize_pill(request):
 
 # ===== ADMIN API ENDPOINTS =====
 
+import base64
 @csrf_exempt
 def add_astronaut(request):
     """Add new astronaut with face photo"""
@@ -896,6 +897,8 @@ def add_astronaut(request):
             
             if face_encodings:
                 astronaut.face_encoding = pickle.dumps(face_encodings[0])
+                photo.seek(0)  # Rewind file pointer after face_recognition consumed it
+                astronaut.photo = base64.b64encode(photo.read()).decode('utf-8')  # Save the actual photo as base64
                 astronaut.save()
                 
                 return JsonResponse({
@@ -930,10 +933,54 @@ def list_astronauts(request):
         'name': a.name,
         'astronaut_id': a.astronaut_id,
         'has_face_encoding': a.face_encoding is not None,
-        'photo_url': None  # We don't store photos, just encodings
+        # 'photo_url': a.photo.url if a.photo else None
+        'photo_url': 'data:image/jpeg;base64,' + a.photo if a.photo else None
     } for a in astronauts]
     
     return JsonResponse({'astronauts': data})
+
+
+@csrf_exempt
+def update_astronaut_face(request):
+    """Update astronaut face encoding"""
+    if request.method == 'POST':
+        try:
+            astronaut_id = request.POST.get('astronaut_id')
+            photo = request.FILES.get('photo')
+            
+            if not all([astronaut_id, photo]):
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Astronaut ID and photo are required'
+                })
+            
+            astronaut = get_object_or_404(Astronaut, id=astronaut_id)
+            
+            # Process face encoding
+            image = face_recognition.load_image_file(photo)
+            face_encodings = face_recognition.face_encodings(image)
+            
+            if face_encodings:
+                astronaut.face_encoding = pickle.dumps(face_encodings[0])
+                astronaut.save()
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Face encoding updated successfully'
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'No face detected in photo'
+                })
+                
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': str(e)
+            })
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 @csrf_exempt
@@ -1147,3 +1194,69 @@ def add_medication(request):
         form = MedicationForm()
     
     return render(request, 'add_medication.html', {'form': form})
+
+def medication_inventory_graph(request):
+    return render(request, 'medication_line_graph.html')
+
+@csrf_exempt
+def medication_history_api(request):
+    days = int(request.GET.get('days', 30))
+    since = timezone.now() - timedelta(days=days) if days > 0 else None
+
+    # Build list of every date in the range
+    today = timezone.now().date()
+    if since:
+        start_date = since.date()
+    else:
+        first_log = InventoryLog.objects.order_by('timestamp').first()
+        start_date = first_log.timestamp.date() if first_log else today
+
+    all_dates = []
+    current = start_date
+    while current <= today:
+        all_dates.append(current)
+        current += timedelta(days=1)
+
+    data = {}
+    for med in Medication.objects.all():
+        logs = InventoryLog.objects.filter(medication=med)
+        if since:
+            logs = logs.filter(timestamp__gte=since)
+        logs = list(logs.order_by('timestamp'))
+
+        if not logs:
+            data[med.name] = {
+                'type': med.get_medication_type_display(),
+                'points': [
+                    {'date': d.strftime('%Y-%m-%d'), 'quantity': med.current_quantity}
+                    for d in all_dates
+                ]
+            }
+            continue
+
+        # Fill every date working backwards from current quantity
+        log_map = {}
+        for log in logs:
+            log_map[log.timestamp.date()] = log.new_quantity
+
+        points = []
+        last_qty = med.current_quantity
+        for d in reversed(all_dates):
+            if d in log_map:
+                last_qty = log_map[d]
+            points.append({'date': d.strftime('%Y-%m-%d'), 'quantity': last_qty})
+
+        points.reverse()
+
+        data[med.name] = {
+            'type': med.get_medication_type_display(),
+            'points': points
+        }
+
+    summary = {
+        'total':    Medication.objects.count(),
+        'normal':   Medication.objects.filter(status='NORMAL').count(),
+        'low':      Medication.objects.filter(status='LOW').count(),
+        'critical': Medication.objects.filter(status__in=['CRITICAL', 'OUT']).count(),
+    }
+    return JsonResponse({'data': data, 'summary': summary})

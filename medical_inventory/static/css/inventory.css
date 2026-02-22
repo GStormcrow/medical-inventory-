@@ -10,6 +10,17 @@
     margin-right: auto;
 }
 
+.trend-btn {
+    background: #FC3D21;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
 .stat-card {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;

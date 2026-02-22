@@ -1,0 +1,541 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Medication Trends — NASA Medical Inventory{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+    .graph-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+
+    /* ── Page Header ── */
+    .graph-header {
+        margin-bottom: 24px;
+    }
+
+    .graph-header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-align: center;
+    }
+
+    .graph-header h1 span {
+        color: #FC3D21;
+    }
+
+    .graph-header p {
+        color: rgba(255,255,255,0.5);
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    /* ── Summary cards ── */
+    .summary-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .summary-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px;
+        padding: 16px 20px;
+        border-top: 2px solid transparent;
+    }
+
+    .summary-card.total    { border-top-color: #FC3D21; }
+    .summary-card.normal   { border-top-color: #4CAF50; }
+    .summary-card.low      { border-top-color: #FFC107; }
+    .summary-card.critical { border-top-color: #F44336; }
+
+    .summary-card .s-label {
+        font-size: 0.72rem;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+    }
+
+    .summary-card .s-value {
+        font-size: 1.9rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .summary-card.total    .s-value { color: #FC3D21; }
+    .summary-card.normal   .s-value { color: #4CAF50; }
+    .summary-card.low      .s-value { color: #FFC107; }
+    .summary-card.critical .s-value { color: #F44336; }
+
+    /* ── Controls ── */
+    .graph-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .range-tabs {
+        display: flex;
+        gap: 6px;
+    }
+
+    .range-tab {
+        padding: 8px 18px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.05);
+        color: rgba(255,255,255,0.6);
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+    }
+
+    .range-tab:hover {
+        border-color: rgba(252,61,33,0.5);
+        color: #FC3D21;
+        background: rgba(252,61,33,0.08);
+    }
+
+    .range-tab.active {
+        border-color: #FC3D21;
+        color: #FC3D21;
+        background: rgba(252,61,33,0.12);
+    }
+
+    .filter-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-wrap label {
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.5);
+    }
+
+    #med-select {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #fff;
+        font-family: inherit;
+        font-size: 0.85rem;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        min-width: 200px;
+        appearance: none;
+        transition: border-color 0.2s;
+    }
+
+    #med-select:focus { outline: none; border-color: rgba(252,61,33,0.5); }
+    #med-select option { background: #0a0e27; }
+
+    .btn-reset {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.05);
+        color: rgba(255,255,255,0.6);
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+    }
+
+    .btn-reset:hover {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+    }
+
+    /* ── Chart panel ── */
+    .chart-panel {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 12px;
+        position: relative;
+        height: 420px;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .chart-panel canvas {
+        width: 100% !important;
+    }
+
+    .state-msg {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.3);
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+
+    /* ── Legend ── */
+    .legend-panel {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 10px;
+        padding: 14px 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .legend-title {
+        font-size: 0.72rem;
+        color: rgba(255,255,255,0.4);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.65);
+        cursor: pointer;
+        padding: 4px 10px;
+        border-radius: 5px;
+        border: 1px solid transparent;
+        transition: all 0.15s;
+        user-select: none;
+    }
+
+    .legend-item:hover {
+        color: #fff;
+        background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.1);
+    }
+
+    .legend-item.hidden {
+        opacity: 0.3;
+        text-decoration: line-through;
+    }
+
+    .legend-swatch {
+        width: 22px;
+        height: 3px;
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+        .summary-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+        .graph-controls { flex-direction: column; align-items: flex-start; }
+        .summary-row { grid-template-columns: repeat(2, 1fr); }
+        .chart-panel { height: 300px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="graph-page">
+
+    <div class="graph-header">
+        <h1>Medication Inventory Trends</h1>
+        <p>Quantity over time based on checkout and restock history</p>
+    </div>
+
+    <div class="summary-row">
+        <div class="summary-card total">
+            <div class="s-label">Total Medications</div>
+            <div class="s-value" id="count-total">—</div>
+        </div>
+        <div class="summary-card normal">
+            <div class="s-label">Normal Stock</div>
+            <div class="s-value" id="count-normal">—</div>
+        </div>
+        <div class="summary-card low">
+            <div class="s-label">Low Stock</div>
+            <div class="s-value" id="count-low">—</div>
+        </div>
+        <div class="summary-card critical">
+            <div class="s-label">Critical / Out</div>
+            <div class="s-value" id="count-critical">—</div>
+        </div>
+    </div>
+
+    <div class="graph-controls">
+        <div class="range-tabs">
+            <button class="range-tab" onclick="setRange(7, this)">7 Days</button>
+            <button class="range-tab active" onclick="setRange(30, this)">30 Days</button>
+            <button class="range-tab" onclick="setRange(90, this)">90 Days</button>
+            <button class="range-tab" onclick="setRange(0, this)">All Time</button>
+        </div>
+        <div class="filter-wrap">
+            <label for="med-select">Type:</label>
+            <select id="med-select" onchange="applyFilter()">
+                <option value="all">All Types</option>
+            </select>
+            <button class="btn-reset" onclick="resetFilter()">Reset</button>
+        </div>
+    </div>
+
+    <div class="chart-panel">
+        <div class="state-msg" id="state-msg">Loading data...</div>
+        <canvas id="chart" style="display:none"></canvas>
+    </div>
+
+    <div class="legend-panel">
+        <span class="legend-title">Toggle lines:</span>
+        <div id="legend" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+const COLORS = [
+    '#FC3D21','#4CC9F0','#4CAF50','#FFC107','#C77DFF',
+    '#00B4D8','#F72585','#06D6A0','#FFD60A','#FF9F1C',
+    '#A8DADC','#E63946','#118AB2','#7BF1A8','#E9C46A',
+];
+
+let chart = null;
+let currentDays = 30;
+let currentMed = 'all';
+let rawData = {};
+let hiddenSets = new Set();
+
+async function fetchData() {
+    showMsg('Loading data...');
+    document.getElementById('chart').style.display = 'none';
+
+    try {
+        const res = await fetch(`/api/medications/history/?days=${currentDays}`);
+        const json = await res.json();
+        rawData = json.data || {};
+        if (json.summary) updateSummary(json.summary);
+    } catch(e) {
+        rawData = generateDemoData(currentDays || 90);
+    }
+
+    populateSelect();
+    renderChart();
+}
+
+function generateDemoData(days) {
+    const meds = [
+        { name: 'Ibuprofen',       start: 80 },
+        { name: 'Acetaminophen',   start: 55 },
+        { name: 'Amoxicillin',     start: 30 },
+        { name: 'Ondansetron',     start: 25 },
+        { name: 'Diphenhydramine', start: 45 },
+        { name: 'Melatonin',       start: 70 },
+        { name: 'Loratadine',      start: 35 },
+    ];
+    const result = {};
+    const today = new Date();
+    meds.forEach(med => {
+        result[med.name] = [];
+        let qty = med.start;
+        for (let i = days; i >= 0; i--) {
+            const d = new Date(today);
+            d.setDate(d.getDate() - i);
+            if (Math.random() < 0.2) qty = Math.max(0, qty - Math.floor(Math.random() * 5 + 1));
+            if (qty < 8 && Math.random() < 0.35) qty = Math.floor(Math.random() * 35 + 15);
+            result[med.name].push({ date: d.toISOString().slice(0,10), quantity: qty });
+        }
+    });
+    return result;
+}
+
+function updateSummary(s) {
+    document.getElementById('count-total').textContent    = s.total    ?? '—';
+    document.getElementById('count-normal').textContent   = s.normal   ?? '—';
+    document.getElementById('count-low').textContent      = s.low      ?? '—';
+    document.getElementById('count-critical').textContent = s.critical ?? '—';
+}
+
+function populateSelect() {
+    const sel = document.getElementById('med-select');
+    const prev = sel.value;
+    sel.innerHTML = '<option value="all">All Types</option>';
+    const types = [...new Set(Object.values(rawData).map(d => d.type).filter(Boolean))].sort();
+    types.forEach(type => {
+        const opt = document.createElement('option');
+        opt.value = type; opt.textContent = type;
+        sel.appendChild(opt);
+    });
+    sel.value = types.includes(prev) ? prev : 'all';
+    currentMed = sel.value;
+}
+
+function buildDatasets() {
+    const names = currentMed === 'all'
+        ? Object.keys(rawData)
+        : Object.keys(rawData).filter(n => rawData[n].type === currentMed);
+
+    const allDates = [...new Set(
+        names.flatMap(n => (rawData[n].points || []).map(p => p.date))
+    )].sort();
+
+    return {
+        labels: allDates,
+        datasets: names.map((name, i) => {
+            const map = {};
+            (rawData[name].points || []).forEach(p => map[p.date] = p.quantity);
+            const color = COLORS[i % COLORS.length];
+            return {
+                label: name,
+                data: allDates.map(d => map[d] ?? null),
+                borderColor: color,
+                backgroundColor: color + '18',
+                borderWidth: 2,
+                pointRadius: allDates.length <= 31 ? 4 : 0,
+                pointHoverRadius: 6,
+                pointBackgroundColor: color,
+                pointBorderColor: '#0a0e27',
+                pointBorderWidth: 2,
+                tension: 0.35,
+                fill: false,
+                spanGaps: true,
+                hidden: hiddenSets.has(name),
+            };
+        })
+    };
+}
+
+function renderChart() {
+    if (!Object.keys(rawData).length) { showMsg('No inventory history found.'); return; }
+
+    showMsg('');
+    const canvas = document.getElementById('chart');
+    canvas.style.display = 'block';
+    const { labels, datasets } = buildDatasets();
+
+    if (chart) {
+        chart.data.labels = labels;
+        chart.data.datasets = datasets;
+        chart.update('none');
+    } else {
+        chart = new Chart(canvas, {
+            type: 'line',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                animation: { duration: 500 },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#0a0e27',
+                        borderColor: 'rgba(252,61,33,0.4)',
+                        borderWidth: 1,
+                        titleColor: '#FC3D21',
+                        bodyColor: 'rgba(255,255,255,0.8)',
+                        titleFont: { size: 12, weight: '600', family: 'inherit' },
+                        bodyFont: { size: 12, family: 'inherit' },
+                        padding: 12,
+                        callbacks: {
+                            title: items => items[0].label,
+                            label: item => ` ${item.dataset.label}: ${item.parsed.y} units`,
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: {
+                            color: 'rgba(255,255,255,0.35)',
+                            font: { size: 11, family: 'inherit' },
+                            maxTicksLimit: 12,
+                            maxRotation: 0,
+                        },
+                        border: { color: 'rgba(255,255,255,0.08)' },
+                    },
+                    y: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: {
+                            color: 'rgba(255,255,255,0.35)',
+                            font: { size: 11, family: 'inherit' },
+                            callback: v => v + ' u',
+                        },
+                        border: { color: 'rgba(255,255,255,0.08)' },
+                        beginAtZero: true,
+                    }
+                }
+            }
+        });
+    }
+
+    renderLegend(datasets);
+}
+
+function renderLegend(datasets) {
+    document.getElementById('legend').innerHTML = datasets.map(ds => `
+        <div class="legend-item ${hiddenSets.has(ds.label) ? 'hidden' : ''}"
+             onclick="toggleLine('${ds.label}', this)">
+            <div class="legend-swatch" style="background:${ds.borderColor}"></div>
+            ${ds.label}
+        </div>
+    `).join('');
+}
+
+function toggleLine(name, el) {
+    if (hiddenSets.has(name)) hiddenSets.delete(name);
+    else hiddenSets.add(name);
+    el.classList.toggle('hidden');
+    const ds = chart.data.datasets.find(d => d.label === name);
+    if (ds) { ds.hidden = hiddenSets.has(name); chart.update(); }
+}
+
+function setRange(days, btn) {
+    currentDays = days;
+    document.querySelectorAll('.range-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    if (chart) { chart.destroy(); chart = null; }
+    fetchData();
+}
+
+function applyFilter() {
+    currentMed = document.getElementById('med-select').value;
+    hiddenSets.clear();
+    if (chart) { chart.destroy(); chart = null; }
+    renderChart();
+}
+
+function resetFilter() {
+    currentMed = 'all';
+    document.getElementById('med-select').value = 'all';
+    hiddenSets.clear();
+    if (chart) { chart.destroy(); chart = null; }
+    renderChart();
+}
+
+function showMsg(msg) {
+    const el = document.getElementById('state-msg');
+    el.textContent = msg;
+    el.style.display = msg ? 'flex' : 'none';
+}
+
+fetchData();
+setInterval(fetchData, 60000);
+</script>
+{% endblock %}
