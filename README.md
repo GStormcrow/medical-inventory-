@@ -1,6 +1,20 @@
 # NASA Medical Inventory System
 
-Advanced medication management system for space missions using facial recognition and automated inventory tracking.
+Advanced medication management system for space missions using facial recognition and Arduino ESP32 for secure locking of medication and automated inventory tracking of medications.
+
+## Members
+Created by Kowin Ngo, Christian Sang, Daniel Sanjuan, and Jayden Argudo
+Teacher: Emre Gemici
+School: Bergen County Technical High School - Teterboro Campus
+
+## Technology Used
+- Django Framework
+- C++
+- PostgreSQL
+- Arduino ESP32 Development Board
+- 12V DC Solenoid Lock
+- Facial Recognition Python Project (1.3.0)
+- Tesseract OCR
 
 ## Features
 
@@ -59,10 +73,6 @@ medical-inventory-/
 ├── media/                  # Uploaded files
 └── staticfiles/           # Static assets
 ```
-
-## Documentation
-
-For detailed setup instructions, see the installation guide in the docs.
 
 ## NASA HUNCH Program
 
