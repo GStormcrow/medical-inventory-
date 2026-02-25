@@ -2,7 +2,6 @@
 
 Advanced medication management system for space missions using facial recognition and Arduino ESP32 for secure locking of medication and automated inventory tracking of medications.
 <img width="1919" height="994" alt="Screenshot 2026-02-22 184822" src="https://github.com/user-attachments/assets/1a6b4385-0120-46c3-b230-ffc1fbbedd10" />
-<img width="1919" height="994" alt="Screenshot 2026-02-22 184822" src="https://github.com/user-attachments/assets/1a6b4385-0120-46c3-b230-ffc1fbbedd10" />
 
 ## Members
 Created by Kowin Ngo, Christian Sang, Daniel Sanjuan, and Jayden Argudo
