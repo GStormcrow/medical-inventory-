@@ -6,6 +6,7 @@ Advanced medication management system for space missions using facial recognitio
 
 ## Members
 Created by Kowin Ngo, Christian Sang, Daniel Sanjuan, and Jayden Argudo
+<br>
 Teacher: Emre Gemici
 School: Bergen County Technical High School - Teterboro Campus
 
